@@ -1,0 +1,15 @@
+<h1>Links Page</h1>
+<script>
+ var a = "{{ JS|e('js') }}";
+ //alert( "a was " + a );
+</script>
+{% if Links %}
+<ul>
+{% for Link in Links %}
+<li><a href="{{ Link.Url }}" style="{{ Link.Style|e('css') }}" >{{ Link.Title }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Sorry, there are no links.</p>
+{% endif %}
+<p>from obj: {{ o.getFoo() }}</p>
