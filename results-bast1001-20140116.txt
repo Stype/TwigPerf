@@ -1,0 +1,453 @@
+>>>>>>>>>> MediaWiki Templates <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/mediawiki)***
+time: 2.081472158432
+<div id="divid">my div's body</div>
+time: 2.0712480545044
+<div id="divid">my div's body</div>
+time: 2.1092789173126
+<div id="divid">my div's body</div>
+time: 2.0638029575348
+<div id="divid">my div's body</div>
+time: 2.0973219871521
+<div id="divid">my div's body</div>
+time: 2.0970659255981
+<div id="divid">my div's body</div>
+time: 2.0920071601868
+<div id="divid">my div's body</div>
+time: 2.0993709564209
+<div id="divid">my div's body</div>
+time: 2.0983169078827
+<div id="divid">my div's body</div>
+time: 2.0917179584503
+<div id="divid">my div's body</div>
+*** test1b (/home/gwicke/TwigPerf/mediawiki)***
+time: 2.1818149089813
+<div id="divid100000">my div's body</div>
+time: 2.2287809848785
+<div id="divid100000">my div's body</div>
+time: 2.2228989601135
+<div id="divid100000">my div's body</div>
+time: 2.1838049888611
+<div id="divid100000">my div's body</div>
+time: 2.1882901191711
+<div id="divid100000">my div's body</div>
+time: 2.1539978981018
+<div id="divid100000">my div's body</div>
+time: 2.1708657741547
+<div id="divid100000">my div's body</div>
+time: 2.1780149936676
+<div id="divid100000">my div's body</div>
+time: 2.1635420322418
+<div id="divid100000">my div's body</div>
+time: 2.1534941196442
+<div id="divid100000">my div's body</div>
+*** test2 (/home/gwicke/TwigPerf/mediawiki)***
+time: 21.862528800964
+time: 21.632048845291
+time: 21.403132915497
+time: 21.70383810997
+time: 21.453002929688
+time: 21.331307888031
+time: 21.583967924118
+time: 21.514466047287
+time: 21.713472127914
+time: 21.56484079361
+*** test3 (/home/gwicke/TwigPerf/mediawiki)***
+time: 9.617978811264
+time: 9.3699510097504
+time: 9.3919260501862
+time: 9.5312161445618
+time: 9.3995060920715
+time: 9.4960432052612
+time: 9.472375869751
+time: 9.3912100791931
+time: 9.4260289669037
+time: 9.4692258834839
+>>>>>>>>>> Twig String No Cache <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/twignocache)***
+time: 1.811292886734
+<div id="divid">my div&#039;s body</div>
+time: 1.7644720077515
+<div id="divid">my div&#039;s body</div>
+time: 1.7952167987823
+<div id="divid">my div&#039;s body</div>
+time: 1.783105134964
+<div id="divid">my div&#039;s body</div>
+time: 1.7904529571533
+<div id="divid">my div&#039;s body</div>
+time: 1.7870628833771
+<div id="divid">my div&#039;s body</div>
+time: 1.7908871173859
+<div id="divid">my div&#039;s body</div>
+time: 1.8191800117493
+<div id="divid">my div&#039;s body</div>
+time: 1.7844839096069
+<div id="divid">my div&#039;s body</div>
+time: 1.7644619941711
+<div id="divid">my div&#039;s body</div>
+*** test1b (/home/gwicke/TwigPerf/twignocache)***
+time: 1.8628602027893
+<div id="divid100000">my div&#039;s body</div>
+time: 1.853807926178
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8701140880585
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8534028530121
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8601758480072
+<div id="divid100000">my div&#039;s body</div>
+time: 1.877571105957
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8324131965637
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8893389701843
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8542740345001
+<div id="divid100000">my div&#039;s body</div>
+time: 1.8404738903046
+<div id="divid100000">my div&#039;s body</div>
+*** test2 (/home/gwicke/TwigPerf/twignocache)***
+time: 7.8516848087311
+time: 8.0038659572601
+time: 7.9480450153351
+time: 7.8015558719635
+time: 8.0667171478271
+time: 7.8841090202332
+time: 7.927750825882
+time: 7.7851707935333
+time: 8.0008628368378
+time: 7.841922044754
+*** test3 (/home/gwicke/TwigPerf/twignocache)***
+time: 4.7200050354004
+time: 4.7613351345062
+time: 4.7506809234619
+time: 4.878977060318
+time: 4.9192519187927
+time: 4.7294471263885
+time: 4.7936000823975
+time: 4.7943229675293
+time: 4.7502369880676
+time: 4.7436630725861
+>>>>>>>>>> Twig File No Cache <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/twignocache_file)***
+time: 2.157151222229
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1137380599976
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1504621505737
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1369400024414
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1496357917786
+<div id="divid">my div&#039;s body</div>
+
+time: 2.115974187851
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1432709693909
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1416909694672
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1419470310211
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1348898410797
+<div id="divid">my div&#039;s body</div>
+
+*** test1b (/home/gwicke/TwigPerf/twignocache_file)***
+time: 2.2371339797974
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2562701702118
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2204968929291
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2127330303192
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2461671829224
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2517890930176
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2279019355774
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2564790248871
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2478220462799
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2556450366974
+<div id="divid100000">my div&#039;s body</div>
+
+*** test2 (/home/gwicke/TwigPerf/twignocache_file)***
+time: 7.9263210296631
+time: 7.8128190040588
+time: 7.9283990859985
+time: 7.9569821357727
+time: 7.8153719902039
+time: 7.9740588665009
+time: 7.8915190696716
+time: 7.9011838436127
+time: 7.7377669811249
+time: 7.8746101856232
+*** test3 (/home/gwicke/TwigPerf/twignocache_file)***
+time: 4.7443900108337
+time: 4.7383117675781
+time: 4.7612278461456
+time: 4.7584180831909
+time: 4.7767448425293
+time: 4.8138210773468
+time: 4.7654800415039
+time: 4.7469298839569
+time: 4.7985100746155
+time: 4.8124639987946
+>>>>>>>>>> Twig File Cached <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/twigcache_file)***
+time: 2.1418039798737
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1372680664062
+<div id="divid">my div&#039;s body</div>
+
+time: 2.118185043335
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1323561668396
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1394419670105
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1318678855896
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1342349052429
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1588618755341
+<div id="divid">my div&#039;s body</div>
+
+time: 2.102648973465
+<div id="divid">my div&#039;s body</div>
+
+time: 2.1943309307098
+<div id="divid">my div&#039;s body</div>
+
+*** test1b (/home/gwicke/TwigPerf/twigcache_file)***
+time: 2.2554769515991
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2177531719208
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2731518745422
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2380249500275
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2279279232025
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2358529567719
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.212375164032
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2289340496063
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2335369586945
+<div id="divid100000">my div&#039;s body</div>
+
+time: 2.2383079528809
+<div id="divid100000">my div&#039;s body</div>
+
+*** test2 (/home/gwicke/TwigPerf/twigcache_file)***
+time: 7.8833529949188
+time: 7.7100188732147
+time: 7.8859460353851
+time: 7.8015990257263
+time: 7.7323908805847
+time: 7.8166091442108
+time: 7.7604570388794
+time: 8.004499912262
+time: 7.7692239284515
+time: 7.8088960647583
+*** test3 (/home/gwicke/TwigPerf/twigcache_file)***
+time: 4.7990961074829
+time: 4.7299921512604
+time: 4.7277851104736
+time: 4.7421729564667
+time: 4.7416138648987
+time: 4.8839321136475
+time: 4.7280359268188
+time: 4.7811601161957
+time: 4.7292640209198
+time: 4.7900230884552
+>>>>>>>>>> Mustache <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/mustache)***
+time: 2.2854030132294
+<div id="divid">my div's body</div>
+time: 2.3180830478668
+<div id="divid">my div's body</div>
+time: 2.3668010234833
+<div id="divid">my div's body</div>
+time: 2.297189950943
+<div id="divid">my div's body</div>
+time: 2.3226838111877
+<div id="divid">my div's body</div>
+time: 2.332713842392
+<div id="divid">my div's body</div>
+time: 2.306538105011
+<div id="divid">my div's body</div>
+time: 2.3370180130005
+<div id="divid">my div's body</div>
+time: 2.3339068889618
+<div id="divid">my div's body</div>
+time: 2.3221662044525
+<div id="divid">my div's body</div>
+*** test1b (/home/gwicke/TwigPerf/mustache)***
+time: 2.3871870040894
+<div id="divid100000">my div's body</div>
+time: 2.3893928527832
+<div id="divid100000">my div's body</div>
+time: 2.3829889297485
+<div id="divid100000">my div's body</div>
+time: 2.3512468338013
+<div id="divid100000">my div's body</div>
+time: 2.3713009357452
+<div id="divid100000">my div's body</div>
+time: 2.4069571495056
+<div id="divid100000">my div's body</div>
+time: 2.3618791103363
+<div id="divid100000">my div's body</div>
+time: 2.3718829154968
+<div id="divid100000">my div's body</div>
+time: 2.393593788147
+<div id="divid100000">my div's body</div>
+time: 2.3930649757385
+<div id="divid100000">my div's body</div>
+*** test2 (/home/gwicke/TwigPerf/mustache)***
+time: 14.311942815781
+time: 14.398847818375
+time: 14.545525789261
+time: 14.322947025299
+time: 14.226306915283
+time: 14.141320943832
+time: 14.232918024063
+time: 14.56929397583
+time: 14.837568044662
+time: 14.416908979416
+*** test2 lambda (/home/gwicke/TwigPerf/mustache)***
+time: 31.020719051361
+time: 29.880539894104
+time: 30.162039041519
+time: 30.761042118073
+time: 29.974234819412
+time: 30.352066040039
+time: 30.455353021622
+time: 29.984830856323
+time: 30.088975191116
+time: 30.290798902512
+*** test3 (/home/gwicke/TwigPerf/mustache)***
+time: 4.6726181507111
+time: 4.6613187789917
+time: 4.6368958950043
+time: 4.6271679401398
+time: 4.6255068778992
+time: 4.6611149311066
+time: 4.7000699043274
+time: 4.6204090118408
+time: 4.6887209415436
+time: 4.6058931350708
+>>>>>>>>>> Mustache Node.js <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/mustache-node)***
+time: 0.424
+<div id="divid">my div&#39;s body</div>
+time: 0.402
+<div id="divid">my div&#39;s body</div>
+time: 0.411
+<div id="divid">my div&#39;s body</div>
+time: 0.42
+<div id="divid">my div&#39;s body</div>
+time: 0.408
+<div id="divid">my div&#39;s body</div>
+time: 0.397
+<div id="divid">my div&#39;s body</div>
+time: 0.407
+<div id="divid">my div&#39;s body</div>
+time: 0.41
+<div id="divid">my div&#39;s body</div>
+time: 0.399
+<div id="divid">my div&#39;s body</div>
+time: 0.398
+<div id="divid">my div&#39;s body</div>
+*** test1b (/home/gwicke/TwigPerf/mustache-node)***
+time: 0.465
+<div id="divid100000">my div&#39;s body</div>
+time: 0.488
+<div id="divid100000">my div&#39;s body</div>
+time: 0.484
+<div id="divid100000">my div&#39;s body</div>
+time: 0.469
+<div id="divid100000">my div&#39;s body</div>
+time: 0.469
+<div id="divid100000">my div&#39;s body</div>
+time: 0.477
+<div id="divid100000">my div&#39;s body</div>
+time: 0.477
+<div id="divid100000">my div&#39;s body</div>
+time: 0.467
+<div id="divid100000">my div&#39;s body</div>
+time: 0.455
+<div id="divid100000">my div&#39;s body</div>
+time: 0.483
+<div id="divid100000">my div&#39;s body</div>
+*** test2 (/home/gwicke/TwigPerf/mustache-node)***
+time: 2.916
+time: 2.993
+time: 2.79
+time: 2.594
+time: 3.006
+time: 2.977
+time: 2.922
+time: 2.752
+time: 2.996
+time: 3.062
+*** test2 lambda (/home/gwicke/TwigPerf/mustache-node)***
+time: 4.229
+time: 4.434
+time: 4.251
+time: 4.476
+time: 4.534
+time: 4.333
+time: 4.467
+time: 4.307
+time: 4.468
+time: 4.353
+*** test3 (/home/gwicke/TwigPerf/mustache-node)***
+time: 0.727
+time: 0.797
+time: 0.749
+time: 0.784
+time: 0.761
+time: 0.789
+time: 0.835
+time: 0.772
+time: 0.767
+time: 0.784
+done
