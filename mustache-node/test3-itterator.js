@@ -26,4 +26,4 @@ for ( n=0; n <= 1000; ++n ) {
 	html = mustache.render('<div id="{{ id }}">{{# items }}<p>{{ . }}</p>{{/ items }}</div>', vars );
 }
 console.log("time: " + ((new Date() - startTime) / 1000));
-console.log(html);
+//console.log(html);
