@@ -31,5 +31,5 @@ for ( $n=0; $n <= 1000; ++$n ) {
 		$body
 	);
 }
-echo "time: " . ( microtime(true) - $time_start );
-#echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+#echo "$html\n";

@@ -23,6 +23,6 @@ for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['m_items'] = $m_items;
 	$html = @$engine->render('<div id="{{ id }}">{{# m_items }}<div id="{{ key }}">{{ val }}</div>{{/ m_items }}</div>', $vars );
 }
-echo "time: " . ( microtime(true) - $time_start );
-echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+#echo "$html\n";
 

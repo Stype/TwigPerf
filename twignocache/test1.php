@@ -12,6 +12,6 @@ for ( $n=0; $n <= 100000; ++$n ) {
 	$vars['body'] = 'my div\'s body';
 	$html = $twig->render('<div id="{{ id }}">{{ body }}</div>', $vars );
 }
-echo "time: " . ( microtime(true) - $time_start );
-echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+echo "$html\n";
 
