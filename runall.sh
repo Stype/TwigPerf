@@ -140,7 +140,7 @@ done
 echo "*** test2 lambda (`pwd`)***"
 for i in {1..10}
 do
-	test2-loop-lambda.php
+	php test2-loop-lambda.php
 done
 
 echo "*** test3 (`pwd`)***"
@@ -151,7 +151,7 @@ done
 
 cd ..
 
-echo ">>>>>>>>>> Mustache <<<<<<<<<<<<<"
+echo ">>>>>>>>>> Mustache Node.js <<<<<<<<<<<<<"
 cd mustache-node
 echo "*** test1 (`pwd`)***"
 for i in {1..10}
@@ -174,7 +174,7 @@ done
 echo "*** test2 lambda (`pwd`)***"
 for i in {1..10}
 do
-	test2-loop-lambda.js
+	node test2-loop-lambda.js
 done
 
 echo "*** test3 (`pwd`)***"
