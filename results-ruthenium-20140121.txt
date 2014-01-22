@@ -826,4 +826,80 @@ time: 0.719
 time: 0.722
 time: 0.727
 time: 0.722
+>>>>>>>>>> Handlebars Node.js <<<<<<<<<<<<<
+*** test1 (/home/gwicke/TwigPerf/handlebars-node)***
+time: 0.238
+<div id="divid">my div&#x27;s body</div>
+time: 0.236
+<div id="divid">my div&#x27;s body</div>
+time: 0.237
+<div id="divid">my div&#x27;s body</div>
+time: 0.237
+<div id="divid">my div&#x27;s body</div>
+time: 0.122
+<div id="divid">my div&#x27;s body</div>
+time: 0.119
+<div id="divid">my div&#x27;s body</div>
+time: 0.121
+<div id="divid">my div&#x27;s body</div>
+time: 0.118
+<div id="divid">my div&#x27;s body</div>
+time: 0.118
+<div id="divid">my div&#x27;s body</div>
+time: 0.123
+<div id="divid">my div&#x27;s body</div>
+*** test1b (/home/gwicke/TwigPerf/handlebars-node)***
+time: 0.16
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.158
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.318
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.193
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.162
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.287
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.235
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.159
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.164
+<div id="divid100000">my div&#x27;s body</div>
+time: 0.16
+<div id="divid100000">my div&#x27;s body</div>
+*** test2 (/home/gwicke/TwigPerf/handlebars-node)***
+time: 0.597
+time: 0.597
+time: 0.589
+time: 0.596
+time: 0.878
+time: 0.87
+time: 0.594
+time: 0.591
+time: 0.984
+time: 0.832
+*** test2 lambda (/home/gwicke/TwigPerf/handlebars-node)***
+time: 1.666
+time: 1.47
+time: 1.252
+time: 1.251
+time: 1.249
+time: 1.5
+time: 1.252
+time: 1.242
+time: 1.235
+time: 1.504
+*** test3 (/home/gwicke/TwigPerf/handlebars-node)***
+time: 0.226
+time: 0.184
+time: 0.183
+time: 0.183
+time: 0.183
+time: 0.184
+time: 0.184
+time: 0.183
+time: 0.184
+time: 0.223
 done
