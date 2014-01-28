@@ -369,5 +369,38 @@ done
 
 cd ..
 
+echo ">>>>>>>>>> Handlebars HTMLJS Node.js <<<<<<<<<<<<<"
+cd handlebars-htmljs-node
+echo "*** test1 (`pwd`)***"
+for i in {1..10}
+do
+	node test1.js
+done
+
+echo "*** test1b (`pwd`)***"
+for i in {1..10}
+do
+	node test1b-incid.js
+done
+
+echo "*** test2 (`pwd`)***"
+for i in {1..10}
+do
+	node test2-loop.js
+done
+
+#echo "*** test2 lambda (`pwd`)***"
+#for i in {1..10}
+#do
+#	node test2-loop-lambda.js
+#done
+
+echo "*** test3 (`pwd`)***"
+for i in {1..10}
+do
+	node test3-itterator.js
+done
+
+cd ..
 
 echo "done"
