@@ -155,3 +155,45 @@ HTML.CharRef.prototype.toText = function (textMode) {
   else
     throw new Error("Unknown TEXTMODE: " + textMode);
 };
+
+/* Build optimized versions of the Tag.prototype.toHTML functions */
+(function() {
+  var mkFastToHTML = function(tagName) {
+    tagName = tagName.toUpperCase();
+    var source1 = [
+      "var k,v,i;",
+      "var s = '<" + HTML.properCaseTagName(tagName) + "';",
+      "var attrs = this.evaluateAttributes(parentComponent);",
+      "if (attrs) {",
+      "  for (k in attrs) {",
+      "    k = HTML.properCaseAttributeName(k);",
+      "    v = HTML.toText(attrs[k], "+HTML.TEXTMODE.ATTRIBUTE+", parentComponent);",
+      "    s += ' ' + k + '=\"' + v + '\"';",
+      "  }",
+      "}",
+      "s += '>';"
+    ].join('\n');
+    var source2 = [
+      "for (i = 0; i < this.children.length; i++) {",
+      "  s += HTML.toHTML(this.children[i], parentComponent);",
+      "}",
+      "s += '</"+HTML.properCaseTagName(tagName) + ">';"
+    ].join('\n');
+    var source3 =
+      "return s;"
+
+    var source = source1;
+    if (!HTML.isVoidElement(tagName)) {
+      source += '\n' + source2;
+    }
+    source += '\n' + source3;
+
+    var fun = new Function('parentComponent', source);
+    if (tagName !== 'TEXTAREA') {
+      HTML[tagName].prototype.toHTML = fun;
+    }
+  };
+
+  for (var i = 0; i < HTML.knownElementNames.length; i++)
+    mkFastToHTML(HTML.knownElementNames[i]);
+})();

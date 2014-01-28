@@ -62,6 +62,7 @@ HTML.properCaseTagName = function (name) {
 
 // See docs for properCaseTagName.
 HTML.properCaseAttributeName = function (name) {
+  if (name==='id') { return name; /* fast path */ }
   var lowered = HTML.asciiLowerCase(name);
   return svgCamelCaseAttributesMap.hasOwnProperty(lowered) ?
     svgCamelCaseAttributesMap[lowered] : lowered;
