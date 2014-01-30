@@ -45,13 +45,18 @@ function handleNode(node, cb, options) {
 	}
 
 	if (bindObj['if'] || bindObj.ifnot) {
-		var newOptions = {
+
+		var name = bindObj['if'] ? 'if' : 'ifnot';
+			newOptions = {
 			innerXML: true,
 			handlers: options.handlers
 		};
 		tpl = new DOMCompiler().compile(node, newOptions);
 		return {
-			content: [bindObj['if'] ? 'if' : 'ifnot', {tpl: tpl}]
+			content: [name, {
+				tpl: tpl,
+				data: bindObj[name]
+			}]
 		};
 	}
 }
