@@ -4,7 +4,12 @@ var c = require('./KnockoutCompiler.js'),
 function test(input) {
 	var json = c.compile(input),
 		tpl = qt.compile(json);
+	console.log('=========================');
+	console.log('Knockout template:');
+	console.log(input);
+	console.log('QT JSON:');
 	console.log(JSON.stringify(json, null, 2));
+	console.log('Rendered HTML:');
 	console.log(tpl({
 		items: [
 			{
