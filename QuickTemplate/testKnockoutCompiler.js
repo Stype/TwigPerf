@@ -20,7 +20,7 @@ function test(input) {
 		content: 'Some sample content',
 		id: 'mw1234',
 		predTrue: true,
-		predTrue: false
+		predFalse: false
 	}));
 }
 
