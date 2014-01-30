@@ -1,14 +1,33 @@
-function QuickTemplate () {
-	this.cache = {};
-}
+/*
+ * Prototype JSON template IR evaluator
+ *
+ * Motto: Fast but safe!
+ *
+ * A string-based template representation that can be compiled from DOM-based
+ * templates (knockoutjs syntax for example) and can statically enforce
+ * balancing and contextual sanitization to prevent XSS, for example in href
+ * and src attributes. The JSON format is compact, can easily be persisted and
+ * can be evaluated with a tiny library (this file).
+ *
+ * Performance is on par with compiled handlebars templates, the fastest
+ * string-based library in our tests.
+ *
+ * Input examples:
+ * ['<div',['attr',{id:'id'}],'>',['text','body'],'</div>']
+ * ['<div',['attr',{id:'id'}],'>',
+ *	['foreach',{data:'m_items',tpl:['<div',['attr',{id:'key'}],'>',['text','val'],'</div>']}],
+ * '</div>']
+ */
+
+
+function QuickTemplate () { }
 
 QuickTemplate.prototype.evalExpr = function (expression, scope) {
 	if (/^'.*'$/.test(expression)) {
 		return expression.slice(1,-1);
 	} else {
 		var bits = expression.split('.'),
-			cur = scope,
-			i = 0;
+			cur = scope;
 		try {
 			for (var i = 0; i < bits.length; i++) {
 				var bit = bits[i];
@@ -88,8 +107,8 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 				cb(scope[bit[1]]);
 			} else if ( fnName === 'attr' ) {
 				var keys = Object.keys(bit[1]);
-				for (i = 0; i < keys.length; i++) {
-					var name = keys[i],
+				for (var j = 0; j < keys.length; j++) {
+					var name = keys[j],
 						attVal = scope[bit[1][name]]; //self.evalExpr(options[name], scope);
 					if (attVal !== null) {
 						cb(' ' + name + '="'
@@ -136,8 +155,8 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 				code.push('cb(scope[' + JSON.stringify(bit[1]) + ']);');
 			} else if ( fnName === 'attr' ) {
 				var names = Object.keys(bit[1]);
-				for(var i = 0; i < names.length; i++) {
-					var name = names[i];
+				for(var j = 0; j < names.length; j++) {
+					var name = names[j];
 					code.push('attVal = scope['
 						+ JSON.stringify(bit[1][name]) + '];'); //self.evalExpr(options[name], scope);
 					code.push("if (attVal !== null) { "
@@ -177,7 +196,7 @@ QuickTemplate.prototype.compile = function(template, cb) {
 	// bind this and cb
 	var res = function (scope) {
 		return fun.call(self, scope, cb);
-	}
+	};
 	template.__tpl = res;
 	return res;
 };
