@@ -58,10 +58,10 @@ function parseObjectLiteral(objectLiteralString) {
 						} else if (/^\d+\.?\d*$/.test(values)) {
 							// Number
 							values = Number(values);
-						} else if (/^'.*'$/.test(values)) {
+						} else if (/^".*"$/.test(values)) {
 							// Quoted string literal, normalize to double
 							// quote
-							values = '"' + values.slice(1, -1).replace(/"/g, '\\"') + '"';
+							values = "'" + values.slice(1, -1).replace(/'/g, "\\'") + "'";
 						}
 
 						if (values) {

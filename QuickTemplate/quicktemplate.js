@@ -25,7 +25,12 @@ function QuickTemplate () { }
 QuickTemplate.prototype.evalExpr = function (expression, scope) {
 	if (/^'.*'$/.test(expression)) {
 		return expression.slice(1,-1);
+	} else if (scope[expression] !== undefined) {
+		// Simple case / fast path
+		return scope[expression];
 	} else {
+		// Somewhat dodgy attempt to limit the power of expressions to dot
+		// notation for now
 		var bits = expression.split('.'),
 			cur = scope;
 		try {
@@ -56,13 +61,13 @@ QuickTemplate.prototype.ctlFn_foreach = function(options, scope, cb) {
 };
 
 QuickTemplate.prototype.ctlFn_if = function(options, scope, cb) {
-	if (this.evalExpr(options.pred, scope)) {
+	if (this.evalExpr(options.data, scope)) {
 		this.render(options.tpl, scope, cb);
 	}
 };
 
 QuickTemplate.prototype.ctlFn_ifnot = function(options, scope, cb) {
-	if (!this.evalExpr(options.pred, scope)) {
+	if (!this.evalExpr(options.data, scope)) {
 		this.render(options.tpl, scope, cb);
 	}
 };
@@ -70,7 +75,7 @@ QuickTemplate.prototype.ctlFn_ifnot = function(options, scope, cb) {
 QuickTemplate.prototype.ctlFn_attr = function(options, scope, cb) {
 	var self = this;
 	Object.keys(options).forEach(function(name) {
-		var attVal = scope[options[name]]; //self.evalExpr(options[name], scope);
+		var attVal = self.evalExpr(options[name], scope);
 		if (attVal !== null) {
 			cb(' ' + name + '="'
 				+ attVal.toString().replace(/"/g, '&quot;')
@@ -79,9 +84,10 @@ QuickTemplate.prototype.ctlFn_attr = function(options, scope, cb) {
 	});
 };
 
-QuickTemplate.prototype.ctlFn_text = function(options, scope, cb) {
-	cb(scope[options]);
-};
+// Actually handled inline for performance
+//QuickTemplate.prototype.ctlFn_text = function(options, scope, cb) {
+//	cb(this.evalExpr(options, scope));
+//};
 
 
 QuickTemplate.prototype.render = function(template, scope, cb) {
@@ -104,12 +110,12 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 			// control structure
 			var fnName = bit[0];
 			if (fnName === 'text') {
-				cb(scope[bit[1]]);
+				cb(this.evalExpr(bit[1], scope));
 			} else if ( fnName === 'attr' ) {
 				var keys = Object.keys(bit[1]);
 				for (var j = 0; j < keys.length; j++) {
 					var name = keys[j],
-						attVal = scope[bit[1][name]]; //self.evalExpr(options[name], scope);
+						attVal = self.evalExpr(options[name], scope);
 					if (attVal !== null) {
 						cb(' ' + name + '="'
 							+ attVal.toString().replace(/"/g, '&quot;')
@@ -135,7 +141,7 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 
 QuickTemplate.prototype.assemble = function(template, cb) {
 	var code = [];
-	code.push('var attVal;');
+	code.push('var attVal, evalExpr = this.evalExpr;');
 	if (!cb) {
 		code.push('var res = "", cb = function(bit) { res += bit; };');
 	}
@@ -152,13 +158,13 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 			// control structure
 			var fnName = bit[0];
 			if (fnName === 'text') {
-				code.push('cb(scope[' + JSON.stringify(bit[1]) + ']);');
+				code.push('cb(evalExpr(' + JSON.stringify(bit[1]) + ', scope));');
 			} else if ( fnName === 'attr' ) {
 				var names = Object.keys(bit[1]);
 				for(var j = 0; j < names.length; j++) {
 					var name = names[j];
-					code.push('attVal = scope['
-						+ JSON.stringify(bit[1][name]) + '];'); //self.evalExpr(options[name], scope);
+					code.push('attVal = evalExpr(' + JSON.stringify(bit[1][name])
+								+ ', scope);');
 					code.push("if (attVal !== null) { "
 						+ "cb(" + JSON.stringify(' ' + name + '="')
 						+ " + (''+attVal).replace(/\"/g, '&quot;') "
