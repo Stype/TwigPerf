@@ -1,0 +1,6 @@
+{
+	"name": "mustacheTest",
+	"dependencies": {
+		"domino": "x.x.x"
+	}
+}

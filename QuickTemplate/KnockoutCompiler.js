@@ -49,7 +49,7 @@ function handleNode(node, cb, options) {
 			innerXML: true,
 			handlers: options.handlers
 		};
-		tpl = DOMCompiler.compile(node, newOptions);
+		tpl = new DOMCompiler().compile(node, newOptions);
 		return {
 			content: [bindObj['if'] ? 'if' : 'ifnot', {tpl: tpl}]
 		};
