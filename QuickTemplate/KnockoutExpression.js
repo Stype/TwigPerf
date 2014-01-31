@@ -55,7 +55,7 @@ function parseObjectLiteral(objectLiteralString) {
 						if (/^{.*}$/.test(values)) {
 							// parse object literals recursively
 							values = parseObjectLiteral(values);
-						} else if (/^\d+\.?\d*$/.test(values)) {
+						} else if (/^\d+[.]?\d*$/.test(values)) {
 							// Number
 							values = Number(values);
 						} else if (/^".*"$/.test(values)) {

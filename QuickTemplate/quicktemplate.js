@@ -23,31 +23,50 @@
 function QuickTemplate () { }
 
 QuickTemplate.prototype.evalExpr = function (expression, scope) {
-	if (/^'.*'$/.test(expression)) {
-		return expression.slice(1,-1);
-	} else if (scope[expression] !== undefined) {
-		// Simple case / fast path
+	// Simple case / fast path
+	if (/^[a-zA-Z_]+$/.test(expression)) {
 		return scope[expression];
-	} else {
-		// Somewhat dodgy attempt to limit the power of expressions to dot
-		// notation for now
-		var bits = expression.split('.'),
-			cur = scope;
-		try {
-			for (var i = 0; i < bits.length; i++) {
-				var bit = bits[i];
-				if (bit === '__proto__' || bit === 'constructor') {
-					throw('illegal member ' + bit_);
-				}
-				cur = cur[bit];
+	}
+
+	// String literal
+	if (/^'.*'$/.test(expression)) {
+		return expression.slice(1,-1).replace(/\\'/g, "'");
+	}
+
+
+	// Somewhat dodgy attempt to limit the power of expressions to dot
+	// notation for now
+	var bits = (''+expression).split('.'),
+		cur = scope;
+	try {
+		for (var i = 0; i < bits.length; i++) {
+			var bit = bits[i];
+			if (bit === '__proto__' || bit === 'constructor') {
+				throw('illegal member ' + bit_);
 			}
-			return cur;
-		} catch (e) {
-			console.error(e);
-			return '';
+			cur = cur[bit];
 		}
+		return cur;
+	} catch (e) {
+		console.error(e);
+		return '';
 	}
 };
+
+/*
+ * Optimized evalExpr stub for the code generator
+ *
+ * Directly dereference the scope for simple expressions (the common case),
+ * and fall back to the full method otherwise.
+ */
+function evalExprStub(expr) {
+	if (/^[a-zA-Z_]+$/.test(expr)) {
+		// fast case
+		return 'scope[' + JSON.stringify(expr) + ']';
+	} else {
+		return 'evalExpr(' + JSON.stringify(expr) + ', scope)';
+	}
+}
 
 QuickTemplate.prototype.ctlFn_foreach = function(options, scope, cb) {
 	// deal with options
@@ -139,6 +158,7 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 	}
 };
 
+
 QuickTemplate.prototype.assemble = function(template, cb) {
 	var code = [];
 	code.push('var attVal, evalExpr = this.evalExpr;');
@@ -157,14 +177,14 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 		} else if (c === Array) {
 			// control structure
 			var fnName = bit[0];
+
 			if (fnName === 'text') {
-				code.push('cb(evalExpr(' + JSON.stringify(bit[1]) + ', scope));');
+				code.push('cb(' + evalExprStub(bit[1]) + ');');
 			} else if ( fnName === 'attr' ) {
 				var names = Object.keys(bit[1]);
 				for(var j = 0; j < names.length; j++) {
 					var name = names[j];
-					code.push('attVal = evalExpr(' + JSON.stringify(bit[1][name])
-								+ ', scope);');
+					code.push('attVal = ' + evalExprStub(bit[1][name]) + ';');
 					code.push("if (attVal !== null) { "
 						+ "cb(" + JSON.stringify(' ' + name + '="')
 						+ " + (''+attVal).replace(/\"/g, '&quot;') "
