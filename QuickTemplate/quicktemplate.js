@@ -229,7 +229,7 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 						// TODO: hook up context-sensitive sanitization for href,
 						// src, style
 						+ 'if(/[<&"]/.test(val)) { val = val.replace(/[<&"]/g,this._xmlEncoder); }'
-						+ "cb(" + JSON.stringify(name + '="')
+						+ "cb(" + JSON.stringify(' ' + name + '="')
 						+ " + val "
 						+ "+ '\"');}");
 				}
