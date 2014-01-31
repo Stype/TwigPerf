@@ -31,7 +31,7 @@ function QuickTemplate () {
 QuickTemplate.prototype.getUID = function() {
 	this.uid++;
 	return this.uid;
-}
+};
 
 QuickTemplate.prototype.evalExpr = function (expression, scope) {
 	// Simple case / fast path
@@ -180,9 +180,13 @@ QuickTemplate.prototype._xmlEncoder = function(c){
 	}
 };
 
+// Alternative escaping machinery from handlebars
 var badChars = /[&<>"'`]/g;
 var possible = /[&<>"'`]/;
-QuickTemplate.prototype.escHTML = function () {
+QuickTemplate.prototype.escHTML = function (string) {
+	//if (string instanceof SafeString) {
+	//	return string;
+	//}
 	if (!string && string !== 0) {
 		return "";
 	}
@@ -194,7 +198,7 @@ QuickTemplate.prototype.escHTML = function () {
 
 	if(!possible.test(string)) { return string; }
 	return string.replace(badChars, this._xmlEncoder);
-}
+};
 
 QuickTemplate.prototype.assemble = function(template, cb) {
 	var code = [];
@@ -215,6 +219,7 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 			// control structure
 			var fnName = bit[0];
 
+			// Inline text and attr handlers for speed
 			if (fnName === 'text') {
 				code.push('val = "" + ' + evalExprStub(bit[1]) + ';');
 				code.push('if(!/[<&]/.test(val)) { cb(val); }');
@@ -234,10 +239,14 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 						+ "+ '\"');}");
 				}
 			} else {
-				// store the args in the cache
+				// Generic control function call
+
+				// Store the args in the cache to a) keep the compiled code
+				// small, and b) share compilations of sub-blocks between
+				// repeated calls
 				var uid = this.getUID();
 				this.cache[uid] = bit[1];
-				// Generic control function call
+
 				code.push('try {');
 				// call the method
 				code.push('this[' + JSON.stringify('ctlFn_' + bit[0])
@@ -260,19 +269,19 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 
 QuickTemplate.prototype.compile = function(template, cb) {
 	var self = this;
-	// TODO: really cache compilation of sub-templates
-	if (template.__tpl) {
+	if (template.__cachedFn) {
+		//
 		return function(scope) {
-			return template.__tpl.call(self, scope, cb);
-		}
+			return template.__cached.call(self, scope, cb);
+		};
 	}
 	var code = this.assemble(template, cb);
 	//console.log(code);
-	var fun = new Function('scope', 'cb', code);
-	template.__tpl = fun;
+	var fn = new Function('scope', 'cb', code);
+	template.__cachedFn = fn;
 	// bind this and cb
 	var res = function (scope) {
-		return fun.call(self, scope, cb);
+		return fn.call(self, scope, cb);
 	};
 	return res;
 };
