@@ -48,3 +48,5 @@ test('<div data-bind="text: 2">Hello world</div>');
 
 // arithmetic expression
 test('<div data-bind="text: 2 + 2 &#x22;">Hello world</div>');
+
+test('hello world<span>foo</span><div data-bind="text: content">ipsum</div>')

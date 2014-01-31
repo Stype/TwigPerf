@@ -79,6 +79,7 @@ function serializeToString(node, options, cb){
 			ret;
 		child = node.firstChild;
 		if (handler) {
+			// Call the handler for elements
 			ret = handler(node, cb, options);
 		}
 		var len = attrs.length;
@@ -152,12 +153,13 @@ function serializeToString(node, options, cb){
 
 function DOMCompiler(){}
 DOMCompiler.prototype.compile = function(node, options){
-	// options contains handlers for certain attributes
+	// Options contain handlers for elements
 	// {
-	//     attr: {
-	//         data-bind: handleDataBind
+	//     handlers: {
+	//         element: handleNode
 	//     }
 	// }
+	//
 
 	var res = [],
 		buf = '',

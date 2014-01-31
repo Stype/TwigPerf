@@ -1,6 +1,8 @@
 /**
  * Compile Knockout templates to quicktemplate JSON
  */
+"use strict";
+
 var DOMCompiler = require('./DOMCompiler.js'),
 	KnockoutExpression = require('./KnockoutExpression.js'),
 	domino = require('domino');
@@ -9,7 +11,7 @@ function handleNode(node, cb, options) {
 	var dataBind = node.getAttribute('data-bind');
 	if (!dataBind) {
 		// let processing continue
-		return false;
+		return {};
 	}
 	// XXX: keep this for client-side re-execution?
 	node.removeAttribute('data-bind');
@@ -33,11 +35,7 @@ function handleNode(node, cb, options) {
 	}
 
 	if (bindObj.foreach) {
-		var newOptions = {
-			innerXML: true,
-			handlers: options.handlers
-		};
-		tpl = new DOMCompiler().compile(node, newOptions);
+		tpl = new DOMCompiler().compile(node, options);
 		var foreachOptions = {
 			data: bindObj.foreach,
 			tpl: tpl
@@ -49,11 +47,7 @@ function handleNode(node, cb, options) {
 	if (bindObj['if'] || bindObj.ifnot) {
 
 		var name = bindObj['if'] ? 'if' : 'ifnot';
-			newOptions = {
-			innerXML: true,
-			handlers: options.handlers
-		};
-		tpl = new DOMCompiler().compile(node, newOptions);
+		tpl = new DOMCompiler().compile(node, options);
 		return {
 			content: [name, {
 				tpl: tpl,
@@ -63,19 +57,29 @@ function handleNode(node, cb, options) {
 	}
 }
 
-function compile (node) {
-	if (node.constructor === String) {
-		node = domino.createDocument(node).body.firstChild;
-	}
+/**
+ * Compile a Knockout template to QuickTemplate JSON
+ *
+ * Accepts either a template string or a DOM node.
+ */
+function compile (nodeOrString) {
 	var options = {
-			handlers: {
-				'element': handleNode
-			}
-		};
+		handlers: {
+			'element': handleNode
+		}
+	},
+		node = nodeOrString;
+
+	// Build a DOM if string was passed in
+	if (nodeOrString.constructor === String) {
+		node = domino.createDocument(nodeOrString).body;
+		// Include all children, but not <body> itself
+		options.innerXML = true;
+	}
 
 	return new DOMCompiler().compile(node, options);
 }
 
 module.exports = {
 	compile: compile
-}
+};
