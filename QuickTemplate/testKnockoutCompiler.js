@@ -47,4 +47,4 @@ test('<div data-bind="text: &quot;constant stri\'ng expression&quot;">Hello worl
 test('<div data-bind="text: 2">Hello world</div>');
 
 // arithmetic expression
-test('<div data-bind="text: 2 + 2">Hello world</div>');
+test('<div data-bind="text: 2 + 2 &#x22;">Hello world</div>');

@@ -18,6 +18,7 @@
  *	['foreach',{data:'m_items',tpl:['<div',['attr',{id:'key'}],'>',['text','val'],'</div>']}],
  * '</div>']
  */
+"use strict";
 
 
 function QuickTemplate () { }
@@ -33,24 +34,21 @@ QuickTemplate.prototype.evalExpr = function (expression, scope) {
 		return expression.slice(1,-1).replace(/\\'/g, "'");
 	}
 
-
-	// Somewhat dodgy attempt to limit the power of expressions to dot
-	// notation for now
-	var bits = (''+expression).split('.'),
-		cur = scope;
-	try {
-		for (var i = 0; i < bits.length; i++) {
-			var bit = bits[i];
-			if (bit === '__proto__' || bit === 'constructor') {
-				throw('illegal member ' + bit_);
-			}
-			cur = cur[bit];
+	// Dot notation
+	if (/^[a-zA-Z_]+(?:[.][a-zA-Z_])+$/.test(expression)) {
+		try {
+			return new Function('scope', 'return scope.' + expression)(scope);
+		} catch (e) {
+			return '';
 		}
-		return cur;
-	} catch (e) {
-		console.error(e);
-		return '';
 	}
+
+	// Don't want to allow full JS expressions for PHP compat & general
+	// sanity. We could do the heavy sanitization work in the compiler & just
+	// eval simple JS-compatible expressions here (possibly using 'with',
+	// although that is deprecated & disabled in strict mode). For now we play
+	// it safe & don't eval the expression.
+	return expression;
 };
 
 /*
@@ -97,6 +95,8 @@ QuickTemplate.prototype.ctlFn_attr = function(options, scope, cb) {
 		var attVal = self.evalExpr(options[name], scope);
 		if (attVal !== null) {
 			cb(' ' + name + '="'
+				// TODO: context-sensitive sanitization on href / src / style
+				// (also in compiled version at end)
 				+ attVal.toString().replace(/"/g, '&quot;')
 				+ '"');
 		}
@@ -129,15 +129,17 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 			// control structure
 			var fnName = bit[0];
 			if (fnName === 'text') {
-				cb(this.evalExpr(bit[1], scope));
+				cb( ('' + this.evalExpr(bit[1], scope)) // convert to string
+						.replace(/[<&]/g, this._xmlEncoder)); // and escape
 			} else if ( fnName === 'attr' ) {
-				var keys = Object.keys(bit[1]);
+				var keys = Object.keys(bit[1]),
+					options = bit[1];
 				for (var j = 0; j < keys.length; j++) {
 					var name = keys[j],
 						attVal = self.evalExpr(options[name], scope);
 					if (attVal !== null) {
 						cb(' ' + name + '="'
-							+ attVal.toString().replace(/"/g, '&quot;')
+							+ (''+attVal).replace(/[<&"]/g, this._xmlEncoder)
 							+ '"');
 					}
 				}
@@ -158,10 +160,35 @@ QuickTemplate.prototype.render = function(template, scope, cb) {
 	}
 };
 
+QuickTemplate.prototype._xmlEncoder = function(c){
+	switch(c) {
+		case '<': return '&lt;';
+		case '>': return '&gt;';
+		case '&': return '&amp;';
+		case '"': return '&quot;';
+		default: return '&#' + c.charCodeAt() + ';';
+	}
+};
+
+var badChars = /[&<>"'`]/g;
+var possible = /[&<>"'`]/;
+QuickTemplate.prototype.escHTML = function () {
+	if (!string && string !== 0) {
+		return "";
+	}
+
+	// Force a string conversion as this will be done by the append regardless and
+	// the regex test will do this transparently behind the scenes, causing issues if
+	// an object's to string has escaped characters in it.
+	string = "" + string;
+
+	if(!possible.test(string)) { return string; }
+	return string.replace(badChars, this._xmlEncoder);
+}
 
 QuickTemplate.prototype.assemble = function(template, cb) {
 	var code = [];
-	code.push('var attVal, evalExpr = this.evalExpr;');
+	code.push('var val, evalExpr = this.evalExpr, xmlEncoder = this._xmlEncoder;');
 	if (!cb) {
 		code.push('var res = "", cb = function(bit) { res += bit; };');
 	}
@@ -179,15 +206,21 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 			var fnName = bit[0];
 
 			if (fnName === 'text') {
-				code.push('cb(' + evalExprStub(bit[1]) + ');');
+				code.push('val = "" + ' + evalExprStub(bit[1]) + ';');
+				code.push('if(!/[<&]/.test(val)) { cb(val); }');
+				code.push('else { cb(val.replace(/[<&]/g,xmlEncoder)); };');
 			} else if ( fnName === 'attr' ) {
 				var names = Object.keys(bit[1]);
 				for(var j = 0; j < names.length; j++) {
 					var name = names[j];
-					code.push('attVal = ' + evalExprStub(bit[1][name]) + ';');
-					code.push("if (attVal !== null) { "
-						+ "cb(" + JSON.stringify(' ' + name + '="')
-						+ " + (''+attVal).replace(/\"/g, '&quot;') "
+					code.push('val = "" + ' + evalExprStub(bit[1][name]) + ';');
+					code.push("if (val !== null) { "
+						// escape the attribute value
+						// TODO: hook up context-sensitive sanitization for href,
+						// src, style
+						+ 'if(/[<&"]/.test(val)) { val = val.replace(/[<&"]/g, xmlEncoder); }'
+						+ "cb(" + JSON.stringify(name + '="')
+						+ " + val "
 						+ "+ '\"');}");
 				}
 			} else {
@@ -212,6 +245,7 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 };
 
 QuickTemplate.prototype.compile = function(template, cb) {
+	// TODO: really cache compilation of sub-templates
 	if (template.__tpl) {
 		return template.__tpl;
 	}
