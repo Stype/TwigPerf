@@ -21,7 +21,17 @@
 "use strict";
 
 
-function QuickTemplate () { }
+function QuickTemplate () {
+	this.uid = 0;
+	// Cache for sub-structure parameters. Storing them globally keyed on uid
+	// makes it possible to reuse compilations.
+	this.cache = {};
+}
+
+QuickTemplate.prototype.getUID = function() {
+	this.uid++;
+	return this.uid;
+}
 
 QuickTemplate.prototype.evalExpr = function (expression, scope) {
 	// Simple case / fast path
@@ -62,7 +72,7 @@ function evalExprStub(expr) {
 		// fast case
 		return 'scope[' + JSON.stringify(expr) + ']';
 	} else {
-		return 'evalExpr(' + JSON.stringify(expr) + ', scope)';
+		return 'this.evalExpr(' + JSON.stringify(expr) + ', scope)';
 	}
 }
 
@@ -188,7 +198,7 @@ QuickTemplate.prototype.escHTML = function () {
 
 QuickTemplate.prototype.assemble = function(template, cb) {
 	var code = [];
-	code.push('var val, evalExpr = this.evalExpr, xmlEncoder = this._xmlEncoder;');
+	code.push('var val;');
 	if (!cb) {
 		code.push('var res = "", cb = function(bit) { res += bit; };');
 	}
@@ -208,7 +218,7 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 			if (fnName === 'text') {
 				code.push('val = "" + ' + evalExprStub(bit[1]) + ';');
 				code.push('if(!/[<&]/.test(val)) { cb(val); }');
-				code.push('else { cb(val.replace(/[<&]/g,xmlEncoder)); };');
+				code.push('else { cb(val.replace(/[<&]/g,this._xmlEncoder)); };');
 			} else if ( fnName === 'attr' ) {
 				var names = Object.keys(bit[1]);
 				for(var j = 0; j < names.length; j++) {
@@ -218,17 +228,21 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 						// escape the attribute value
 						// TODO: hook up context-sensitive sanitization for href,
 						// src, style
-						+ 'if(/[<&"]/.test(val)) { val = val.replace(/[<&"]/g, xmlEncoder); }'
+						+ 'if(/[<&"]/.test(val)) { val = val.replace(/[<&"]/g,this._xmlEncoder); }'
 						+ "cb(" + JSON.stringify(name + '="')
 						+ " + val "
 						+ "+ '\"');}");
 				}
 			} else {
+				// store the args in the cache
+				var uid = this.getUID();
+				this.cache[uid] = bit[1];
 				// Generic control function call
 				code.push('try {');
 				// call the method
 				code.push('this[' + JSON.stringify('ctlFn_' + bit[0])
-						+ '](' + JSON.stringify(bit[1]) + ', scope, cb);');
+						// store in cache / unique key rather than here
+						+ '](this.cache["' + uid + '"], scope, cb);');
 				code.push('} catch(e) {');
 				code.push("console.error('Unsupported control function:', "
 						+ JSON.stringify(bit[0]) + ", e.stack);");
@@ -245,19 +259,21 @@ QuickTemplate.prototype.assemble = function(template, cb) {
 };
 
 QuickTemplate.prototype.compile = function(template, cb) {
+	var self = this;
 	// TODO: really cache compilation of sub-templates
 	if (template.__tpl) {
-		return template.__tpl;
+		return function(scope) {
+			return template.__tpl.call(self, scope, cb);
+		}
 	}
-	var self = this,
-		code = this.assemble(template, cb);
+	var code = this.assemble(template, cb);
 	//console.log(code);
 	var fun = new Function('scope', 'cb', code);
+	template.__tpl = fun;
 	// bind this and cb
 	var res = function (scope) {
 		return fun.call(self, scope, cb);
 	};
-	template.__tpl = res;
 	return res;
 };
 
