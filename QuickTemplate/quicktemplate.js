@@ -272,7 +272,7 @@ QuickTemplate.prototype.compile = function(template, cb) {
 	if (template.__cachedFn) {
 		//
 		return function(scope) {
-			return template.__cached.call(self, scope, cb);
+			return template.__cachedFn.call(self, scope, cb);
 		};
 	}
 	var code = this.assemble(template, cb);
