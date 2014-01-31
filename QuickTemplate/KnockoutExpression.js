@@ -1,6 +1,7 @@
 /*
  * Based on knockout/src/binding/expressionRewriting.js
  */
+"use strict";
 
 
 // The following regular expressions will be used to split an object-literal string into tokens
@@ -10,7 +11,7 @@ var stringDouble = '"(?:[^"\\\\]|\\\\.)*"',
 	stringSingle = "'(?:[^'\\\\]|\\\\.)*'",
 	// Matches a regular expression (text enclosed by slashes), but will also match sets of divisions
 	// as a regular expression (this is handled by the parsing loop below).
-	stringRegexp = '/(?:[^/\\\\]|\\\\.)*/\w*',
+	stringRegexp = '/(?:[^/\\\\]|\\\\.)*/w*',
 	// These characters have special meaning to the parser and must not appear in the middle of a
 	// token, except as part of a string.
 	specials = ',"\'{}()/:[\\]',
@@ -24,7 +25,7 @@ var stringDouble = '"(?:[^"\\\\]|\\\\.)*"',
 	oneNotSpace = '[^\\s]',
 
 	// Create the actual regular expression by or-ing the above strings. The order is important.
-	bindingToken = RegExp(stringDouble + '|' + stringSingle + '|' + stringRegexp + '|' + everyThingElse + '|' + oneNotSpace, 'g'),
+	bindingToken = new RegExp(stringDouble + '|' + stringSingle + '|' + stringRegexp + '|' + everyThingElse + '|' + oneNotSpace, 'g'),
 
 	// Match end of previous token to determine whether a slash is a division or regex.
 	divisionLookBehind = /[\])"'A-Za-z0-9_$]+$/,
@@ -35,7 +36,9 @@ function parseObjectLiteral(objectLiteralString) {
 	var str = objectLiteralString.trim();
 
 	// Trim braces '{' surrounding the whole object literal
-	if (str.charCodeAt(0) === 123) str = str.slice(1, -1);
+	if (str.charCodeAt(0) === 123) {
+		str = str.slice(1, -1);
+	}
 
 	// Split into tokens
 	var result = {}, toks = str.match(bindingToken), key, values, depth = 0;
@@ -67,7 +70,7 @@ function parseObjectLiteral(objectLiteralString) {
 						if (values) {
 							result[key] = values;
 						} else {
-							result['unknown'] = key;
+							result.unknown = key;
 						}
 					}
 					key = values = depth = 0;
@@ -75,8 +78,9 @@ function parseObjectLiteral(objectLiteralString) {
 				}
 			// Simply skip the colon that separates the name and value
 			} else if (c === 58) { // ":"
-				if (!values)
+				if (!values) {
 					continue;
+				}
 			// A set of slashes is initially matched as a regular expression, but could be division
 			} else if (c === 47 && i && tok.length > 1) {  // "/"
 				// Look at the end of the previous token to determine if the slash is actually division
@@ -100,10 +104,11 @@ function parseObjectLiteral(objectLiteralString) {
 				key = (c === 34 || c === 39) /* '"', "'" */ ? tok.slice(1, -1) : tok;
 				continue;
 			}
-			if (values)
+			if (values) {
 				values += tok;
-			else
+			} else {
 				values = tok;
+			}
 		}
 	}
 	return result;
