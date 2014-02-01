@@ -374,19 +374,19 @@ cd handlebars-htmljs-node
 echo "*** test1 (`pwd`)***"
 for i in {1..10}
 do
-	node test1.js
+	node test1-htmljs.js
 done
 
 echo "*** test1b (`pwd`)***"
 for i in {1..10}
 do
-	node test1b-incid.js
+	node test1b-incid-htmljs.js
 done
 
 echo "*** test2 (`pwd`)***"
 for i in {1..10}
 do
-	node test2-loop.js
+	node test2-loop-htmljs.js
 done
 
 #echo "*** test2 lambda (`pwd`)***"
@@ -398,7 +398,41 @@ done
 echo "*** test3 (`pwd`)***"
 for i in {1..10}
 do
-	node test3-itterator.js
+	node test3-itterator-htmljs.js
+done
+
+cd ..
+
+echo ">>>>>>>>>> Spacebars/HTMLJS Node.js <<<<<<<<<<<<<"
+cd handlebars-htmljs-node
+echo "*** test1 (`pwd`)***"
+for i in {1..10}
+do
+	node test1-sb.js
+done
+
+echo "*** test1b (`pwd`)***"
+for i in {1..10}
+do
+	node test1b-incid-sb.js
+done
+
+echo "*** test2 (`pwd`)***"
+for i in {1..10}
+do
+	node test2-loop-sb.js
+done
+
+echo "*** test2 lambda (`pwd`)***"
+for i in {1..10}
+do
+	node test2-loop-lambda-sb.js
+done
+
+echo "*** test3 (`pwd`)***"
+for i in {1..10}
+do
+	node test3-itterator-sb.js
 done
 
 cd ..
