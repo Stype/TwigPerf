@@ -437,4 +437,20 @@ done
 
 cd ..
 
+echo ">>>>>>>>>> Spacebars/QuickTemplate Node.js <<<<<<<<<<<<<"
+cd handlebars-htmljs-node
+echo "*** test1 (`pwd`)***"
+for i in {1..10}
+do
+	node test1-sbqt.js
+done
+
+echo "*** test2 (`pwd`)***"
+for i in {1..10}
+do
+	node test2-loop-sbqt.js
+done
+
+cd ..
+
 echo "done"
