@@ -1,89 +1,98 @@
 
 HTML.toHTML = function (node, parentComponent) {
+  var res = '', cb = function(bit) { res += bit; };
+  HTML._toHTML(node, parentComponent, cb);
+  return res;
+};
+HTML._toHTML = function(node, parentComponent, cb) {
   if (node == null) {
     // null or undefined
-    return '';
+    return cb('');
   } else if ((typeof node === 'string') || (typeof node === 'boolean') || (typeof node === 'number')) {
     // string; escape special chars
-    return HTML.escapeData(String(node));
+    return cb(HTML.escapeData(String(node)));
   } else if (node instanceof Array) {
     // array
-    var parts = [];
     for (var i = 0; i < node.length; i++)
-      parts.push(HTML.toHTML(node[i], parentComponent));
-    return parts.join('');
+        HTML._toHTML(node[i], parentComponent, cb);
+    return;
   } else if (typeof node.instantiate === 'function') {
     // component
     var instance = node.instantiate(parentComponent || null);
     var content = instance.render('STATIC');
     // recurse with a new value for parentComponent
-    return HTML.toHTML(content, instance);
+    return HTML._toHTML(content, instance, cb);
   } else if (typeof node === 'function') {
-    return HTML.toHTML(node(), parentComponent);
-  } else if (node.toHTML) {
+    return HTML._toHTML(node(), parentComponent, cb);
+  } else if (node._toHTML) {
     // Tag or something else
-    return node.toHTML(parentComponent);
+    return node._toHTML(parentComponent, cb);
+  } else if (node.toHTML) {
+    // Compatibility
+    return cb(node.toHTML(parentComponent));
   } else {
     throw new Error("Expected tag, string, array, component, null, undefined, or " +
                     "object with a toHTML method; found: " + node);
   }
 };
 
-HTML.Comment.prototype.toHTML = function () {
-  return '<!--' + this.sanitizedValue + '-->';
+// backwards compatibility
+HTML.Comment.prototype.toHTML =
+HTML.CharRef.prototype.toHTML =
+HTML.Raw.prototype.toHTML =
+HTML.Tag.prototype.toHTML = function(parentComponent) {
+  var res = '', cb = function(bit) { res += bit; };
+  this._toHTML(parentComponent, cb);
+  return res;
 };
 
-HTML.CharRef.prototype.toHTML = function () {
-  return this.html;
+HTML.Comment.prototype._toHTML = function (_, cb) {
+  cb('<!--');
+  cb(this.sanitizedValue);
+  cb('-->');
 };
 
-HTML.Raw.prototype.toHTML = function () {
-  return this.value;
+HTML.CharRef.prototype._toHTML = function (_, cb) {
+  return cb(this.html);
 };
 
-HTML.Tag.prototype.toHTML = function (parentComponent) {
-  var attrStrs = [];
+HTML.Raw.prototype._toHTML = function (_, cb) {
+  return cb(this.value);
+};
+
+HTML.Tag.prototype._toHTML = function (parentComponent, cb) {
+  var tagName = this.tagName;
+  cb('<');
+  cb(HTML.properCaseTagName(tagName));
+
   var attrs = this.evaluateAttributes(parentComponent);
   if (attrs) {
     for (var k in attrs) {
+      var v = attrs[k];
       k = HTML.properCaseAttributeName(k);
-      var v = HTML.toText(attrs[k], HTML.TEXTMODE.ATTRIBUTE, parentComponent);
-      attrStrs.push(' ' + k + '="' + v + '"');
+      cb(' '); cb(k); cb('="');
+      HTML._toText(v, HTML.TEXTMODE.ATTRIBUTE, parentComponent, cb);
+      cb('"');
     }
   }
+  cb('>');
 
-  var tagName = this.tagName;
-  var startTag = '<' + HTML.properCaseTagName(tagName) + attrStrs.join('') + '>';
-
-  var childStrs = [];
-  var content;
   if (tagName === 'TEXTAREA') {
+    // TEXTAREA absorbs the first newline
+    cb('\n');
     for (var i = 0; i < this.children.length; i++)
-      childStrs.push(HTML.toText(this.children[i], HTML.TEXTMODE.RCDATA, parentComponent));
-
-    content = childStrs.join('');
-    if (content.slice(0, 1) === '\n')
-      // TEXTAREA will absorb a newline, so if we see one, add
-      // another one.
-      content = '\n' + content;
-
+      HTML._toText(this.children[i], HTML.TEXTMODE.RCDATA, parentComponent, cb);
   } else {
     for (var i = 0; i < this.children.length; i++)
-      childStrs.push(HTML.toHTML(this.children[i], parentComponent));
-
-    content = childStrs.join('');
+      HTML._toHTML(this.children[i], parentComponent, cb);
   }
-
-  var result = startTag + content;
 
   if (this.children.length || ! HTML.isVoidElement(tagName)) {
     // "Void" elements like BR are the only ones that don't get a close
     // tag in HTML5.  They shouldn't have contents, either, so we could
     // throw an error upon seeing contents here.
-    result += '</' + HTML.properCaseTagName(tagName) + '>';
+    cb('</'); cb(HTML.properCaseTagName(tagName)); cb('>');
   }
-
-  return result;
 };
 
 HTML.TEXTMODE = {
@@ -93,38 +102,46 @@ HTML.TEXTMODE = {
 };
 
 HTML.toText = function (node, textMode, parentComponent) {
+  var res = '', cb = function(bit) { res += bit; };
+  HTML._toText(node, textMode, parentComponent, cb);
+  return res;
+};
+
+HTML._toText = function (node, textMode, parentComponent, cb) {
   if (node == null) {
     // null or undefined
-    return '';
+    return cb('');
   } else if ((typeof node === 'string') || (typeof node === 'boolean') || (typeof node === 'number')) {
     node = String(node);
     // string
     if (textMode === HTML.TEXTMODE.STRING) {
-      return node;
+      return cb(node);
     } else if (textMode === HTML.TEXTMODE.RCDATA) {
-      return HTML.escapeData(node);
+      return cb(HTML.escapeData(node));
     } else if (textMode === HTML.TEXTMODE.ATTRIBUTE) {
       // escape `&` and `"` this time, not `&` and `<`
-      return node.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      return cb(node.replace(/&/g, '&amp;').replace(/"/g, '&quot;'));
     } else {
       throw new Error("Unknown TEXTMODE: " + textMode);
     }
   } else if (node instanceof Array) {
     // array
-    var parts = [];
     for (var i = 0; i < node.length; i++)
-      parts.push(HTML.toText(node[i], textMode, parentComponent));
-    return parts.join('');
+      HTML._toText(node[i], textMode, parentComponent, cb);
+    return;
   } else if (typeof node === 'function') {
-    return HTML.toText(node(), textMode, parentComponent);
+    return HTML._toText(node(), textMode, parentComponent, cb);
   } else if (typeof node.instantiate === 'function') {
     // component
     var instance = node.instantiate(parentComponent || null);
     var content = instance.render('STATIC');
-    return HTML.toText(content, textMode, instance);
-  } else if (node.toText) {
+    return HTML._toText(content, textMode, instance, cb);
+  } else if (node._toText) {
     // Something else
-    return node.toText(textMode, parentComponent);
+    return node._toText(textMode, parentComponent, cb);
+  } else if (node.toText) {
+    // Compatibility
+    return cb(node.toText(textMode, parentComponent));
   } else {
     throw new Error("Expected tag, string, array, component, null, undefined, or " +
                     "object with a toText method; found: " + node);
@@ -132,26 +149,37 @@ HTML.toText = function (node, textMode, parentComponent) {
 
 };
 
-HTML.Raw.prototype.toText = function () {
-  return this.value;
+// backwards compatibility
+HTML.CharRef.prototype.toText =
+HTML.Raw.prototype.toText =
+HTML.Tag.prototype.toText = function(textMode, parentComponent) {
+  var res = '', cb = function(bit) { res += bit; };
+  this._toText(textMode, parentComponent, cb);
+  return res;
+};
+
+HTML.Raw.prototype._toText = function (textMode, parentComponent, cb) {
+  return cb(this.value);
 };
 
 // used when including templates within {{#markdown}}
-HTML.Tag.prototype.toText = function (textMode, parentComponent) {
+HTML.Tag.prototype._toText = function (textMode, parentComponent, cb) {
   if (textMode === HTML.TEXTMODE.STRING)
     // stringify the tag as HTML, then convert to text
-    return HTML.toText(this.toHTML(parentComponent), textMode);
+    return HTML._toText(
+      this.toHTML(parentComponent), textMode, parentComponent, cb
+    );
   else
     throw new Error("Can't insert tags in attributes or TEXTAREA elements");
 };
 
-HTML.CharRef.prototype.toText = function (textMode) {
+HTML.CharRef.prototype._toText = function (textMode, parentComponent, cb) {
   if (textMode === HTML.TEXTMODE.STRING)
-    return this.str;
+    return cb(this.str);
   else if (textMode === HTML.TEXTMODE.RCDATA)
-    return this.html;
+    return cb(this.html);
   else if (textMode === HTML.TEXTMODE.ATTRIBUTE)
-    return this.html;
+    return cb(this.html);
   else
     throw new Error("Unknown TEXTMODE: " + textMode);
 };
@@ -162,35 +190,34 @@ HTML.CharRef.prototype.toText = function (textMode) {
     tagName = tagName.toUpperCase();
     var source1 = [
       "var k,v,i;",
-      "var s = '<" + HTML.properCaseTagName(tagName) + "';",
+      "cb('<" + HTML.properCaseTagName(tagName) + "');",
       "var attrs = this.evaluateAttributes(parentComponent);",
       "if (attrs) {",
       "  for (k in attrs) {",
+      "    var v = attrs[k];",
       "    k = HTML.properCaseAttributeName(k);",
-      "    v = HTML.toText(attrs[k], "+HTML.TEXTMODE.ATTRIBUTE+", parentComponent);",
-      "    s += ' ' + k + '=\"' + v + '\"';",
+      "    cb(' '); cb(k); cb('=\"');",
+      "    HTML._toText(v, "+HTML.TEXTMODE.ATTRIBUTE+", parentComponent, cb);",
+      "    cb('\"');",
       "  }",
       "}",
-      "s += '>';"
+      "cb('>');"
     ].join('\n');
     var source2 = [
       "for (i = 0; i < this.children.length; i++) {",
-      "  s += HTML.toHTML(this.children[i], parentComponent);",
+      "  HTML._toHTML(this.children[i], parentComponent, cb);",
       "}",
-      "s += '</"+HTML.properCaseTagName(tagName) + ">';"
+      "cb('</"+HTML.properCaseTagName(tagName) + ">');"
     ].join('\n');
-    var source3 =
-      "return s;"
 
     var source = source1;
     if (!HTML.isVoidElement(tagName)) {
       source += '\n' + source2;
     }
-    source += '\n' + source3;
 
-    var fun = new Function('parentComponent', source);
+    var fun = new Function('parentComponent', 'cb', source);
     if (tagName !== 'TEXTAREA') {
-      HTML[tagName].prototype.toHTML = fun;
+      HTML[tagName].prototype._toHTML = fun;
     }
   };
 
