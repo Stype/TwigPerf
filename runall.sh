@@ -1,456 +1,183 @@
 #!/bin/bash
 
-
-echo ">>>>>>>>>> MediaWiki Templates <<<<<<<<<<<<<"
-cd mediawiki
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig String No Cache <<<<<<<<<<<<<"
-cd twignocache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig File No Cache <<<<<<<<<<<<<"
-cd twignocache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig File Cached <<<<<<<<<<<<<"
-cd twigcache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Mustache <<<<<<<<<<<<<"
-cd mustache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop-lambda.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-echo ">>>>>>>>>> MediaWiki Templates (HHVM) <<<<<<<<<<<<<"
-cd mediawiki
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig String No Cache (HHVM) <<<<<<<<<<<<<"
-cd twignocache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig File No Cache (HHVM) <<<<<<<<<<<<<"
-cd twignocache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Twig File Cached (HHVM) <<<<<<<<<<<<<"
-cd twigcache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Mustache (HHVM) <<<<<<<<<<<<<"
-cd mustache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop.php
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test2-loop-lambda.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	hhvm test3-itterator.php
-done
-
-cd ..
-
-echo ">>>>>>>>>> Mustache Node.js <<<<<<<<<<<<<"
-cd mustache-node
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	node test1.js
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	node test1b-incid.js
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop.js
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-lambda.js
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	node test3-itterator.js
-done
-
-cd ..
-
-echo ">>>>>>>>>> Handlebars Node.js <<<<<<<<<<<<<"
-cd handlebars-node
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	node test1.js
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	node test1b-incid.js
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop.js
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-lambda.js
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	node test3-itterator.js
-done
-
-cd ..
-
-echo ">>>>>>>>>> Handlebars HTMLJS Node.js <<<<<<<<<<<<<"
-cd handlebars-htmljs-node
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	node test1-htmljs.js
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	node test1b-incid-htmljs.js
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-htmljs.js
-done
-
-#echo "*** test2 lambda (`pwd`)***"
-#for i in {1..10}
-#do
-#	node test2-loop-lambda.js
-#done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	node test3-itterator-htmljs.js
-done
-
-cd ..
-
-echo ">>>>>>>>>> Spacebars/HTMLJS Node.js <<<<<<<<<<<<<"
-cd handlebars-htmljs-node
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	node test1-sb.js
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	node test1b-incid-sb.js
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-sb.js
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-lambda-sb.js
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	node test3-itterator-sb.js
-done
-
-cd ..
-
-echo ">>>>>>>>>> Spacebars/QuickTemplate Node.js <<<<<<<<<<<<<"
-cd handlebars-htmljs-node
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	node test1-sbqt.js
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	node test2-loop-sbqt.js
-done
-
-cd ..
-
-echo "done"
+function runTest {
+	iterations=10
+
+	cd $2
+	echo -e "Set: \033[35;40m$1\033[0;00m (${PWD##*/})"
+
+	for (( i=3; i<=$#; i++ ))
+	do
+		sum=0
+		min=0
+		max=0
+
+		echo -ne "Test: \033[36;40m${!i}\033[0;00m"
+		((i++))
+
+		for (( j=1; j<=$iterations; j++ ))
+		do
+			echo -n " $j..."
+
+			result=`${!i}`
+			time=`echo $result | awk '{print $2}'`
+
+			sum=`bc <<< " $sum + $time"`
+
+			if [ $min == 0 ] || [ `bc <<< " $time < $min"` -eq 1 ]
+			then
+				min=$time
+			fi
+
+			if [ $max == 0 ] || [ `bc <<< " $time > $max"` -eq 1 ]
+			then
+				max=$time
+			fi
+		done
+
+		printf " Avg: \033[33;40m%.4f\033[0;00m Min: \033[32;40m%.4f\033[0;00m Max: \033[31;40m%.4f\033[0;00m\n" `bc <<< "scale=5; $sum / $iterations"` $min $max
+	done
+
+	cd ..
+}
+
+runTest \
+	"Handlebars lightncandy (PHP)" \
+	handlebars-lightncandy-php \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test2 lambda" "php test2-loop-lambda.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"Handlebars lightncandy (PHP) (HHVM)" \
+	handlebars-lightncandy-php \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test2 lambda" "hhvm test2-loop-lambda.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"MediaWiki Templates" \
+	mediawiki \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"Twig String (No Cache)" \
+	twignocache \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"Twig File (No Cache)" \
+	twignocache_file \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"Twig File (Cached)" \
+	twigcache_file \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"Mustache (PHP)" \
+	mustache \
+	"test1"        "php test1.php" \
+	"test1b"       "php test1b-incid.php" \
+	"test2"        "php test2-loop.php" \
+	"test2 lambda" "php test2-loop-lambda.php" \
+	"test3"        "php test3-itterator.php"
+
+runTest \
+	"MediaWiki Templates (HHVM)" \
+	mediawiki \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"Twig String (No Cache) (HHVM)" \
+	twignocache \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"Twig File (No Cache) (HHVM)" \
+	twignocache_file \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"Twig File (Cached) (HHVM)" \
+	twigcache_file \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"Mustache (PHP) (HHVM)" \
+	mustache \
+	"test1"        "hhvm test1.php" \
+	"test1b"       "hhvm test1b-incid.php" \
+	"test2"        "hhvm test2-loop.php" \
+	"test2 lambda" "hhvm test2-loop-lambda.php" \
+	"test3"        "hhvm test3-itterator.php"
+
+runTest \
+	"Mustache (node.js)" \
+	mustache-node \
+	"test1"        "node test1.js" \
+	"test1b"       "node test1b-incid.js" \
+	"test2"        "node test2-loop.js" \
+	"test2 lambda" "node test2-loop-lambda.js" \
+	"test3"        "node test3-itterator.js"
+
+runTest \
+	"Handlebars (node.js)" \
+	handlebars-node \
+	"test1"        "node test1.js" \
+	"test1b"       "node test1b-incid.js" \
+	"test2"        "node test2-loop.js" \
+	"test2 lambda" "node test2-loop-lambda.js" \
+	"test3"        "node test3-itterator.js"
+
+runTest \
+	"Handlebars HTMLJS (node.js)" \
+	handlebars-htmljs-node \
+	"test1"        "node test1-htmljs.js" \
+	"test1b"       "node test1b-incid-htmljs.js" \
+	"test2"        "node test2-loop-htmljs.js" \
+	"test3"        "node test3-itterator-htmljs.js"
+
+runTest \
+	"Spacebars/HTMLJS (node.js)" \
+	handlebars-htmljs-node \
+	"test1"        "node test1-sb.js" \
+	"test1b"       "node test1b-incid-sb.js" \
+	"test2"        "node test2-loop-sb.js" \
+	"test2 lambda" "node test2-loop-lambda-sb.js" \
+	"test3"        "node test3-itterator-sb.js"
+
+runTest \
+	"Spacebars/QuickTemplate (node.js)" \
+	handlebars-htmljs-node \
+	"test1"        "node test1-sbqt.js" \
+	"test2"        "node test2-loop-sbqt.js"
