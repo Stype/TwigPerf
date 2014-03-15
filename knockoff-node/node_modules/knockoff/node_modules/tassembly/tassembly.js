@@ -38,14 +38,16 @@ TAssembly.prototype._getUID = function() {
 var simpleExpression = /^(?:[.][a-zA-Z_$]+)+$/,
 	complexExpression = new RegExp('^(?:[.][a-zA-Z_$]+'
 			+ '(?:\\[(?:[0-9.]+|["\'][a-zA-Z0-9_$]+["\'])\\])?'
-			+ '(?:\\((?:[0-9a-zA-Z_$.]+|["\'][a-zA-Z0-9_$\.]+["\'])\\))?'
+			+ '(?:\\((?:[0-9a-zA-Z_$.]+|["\'][a-zA-Z0-9_$\\.]+["\'])\\))?'
 			+ ')+$');
 TAssembly.prototype._evalExpr = function (expression, scope) {
 	var func = this.cache['expr' + expression];
 	if (!func) {
-		// Simple variable / fast path
-		if (/^[a-zA-Z_$]+$/.test(expression)) {
+		if (/^\$(?:index|parent)$/.test(expression)) {
 			return scope[expression];
+		} else if (/^[a-zA-Z_$]+$/.test(expression)) {
+		// Simple variable, the fast and common case
+			return scope.$data[expression];
 		}
 
 		// String literal
@@ -59,10 +61,13 @@ TAssembly.prototype._evalExpr = function (expression, scope) {
 		// a[1]().b['b']()
 		var texpression = '.' + expression;
 		if (simpleExpression.test(texpression) || complexExpression.test(texpression)) {
-				func = new Function('scope', 'var $index = scope.$index;'
-						+ 'var $data = scope.$data;'
-						+ 'var $parent = scope.$parent;'
-						+ 'return scope' + texpression);
+			if (!/^(?:\$data|\$parent|\$index)/.test(expression)) {
+				expression = '$data.' + expression;
+			}
+			func = new Function('scope', 'var $index = scope.$index,'
+					+ '$data = scope.$data,'
+					+ '$parent = scope.$parent;'
+					+ 'return scope.' + expression);
 			this.cache['expr' + expression] = func;
 		}
 	}
@@ -90,11 +95,20 @@ TAssembly.prototype._evalExpr = function (expression, scope) {
  * and fall back to the full method otherwise.
  */
 function evalExprStub(expr) {
-	if (/^[a-zA-Z_$]+$/.test(expr)) {
-		// simple variable, the fast and common case
+	if (expr === '$data') {
+		return '$data';
+	} else if (/^$(?:index|parent)$/.test(expr)) {
 		return 'scope[' + JSON.stringify(expr) + ']';
+	} else if (/^[a-zA-Z_$]+$/.test(expr)) {
+		// Simple variable, the fast and common case
+		return '$data[' + JSON.stringify(expr) + ']';
+	} else if (/^'.*'$/.test(expr)) {
+		// String literal
+		return JSON.stringify(expr.slice(1,-1).replace(/\\'/g, "'"));
 	} else {
-		return 'this._evalExpr(' + JSON.stringify(expr) + ', scope)';
+		return '(this.cache[' + JSON.stringify('expr' + expr) + '] ?'
+			+ 'this.cache[' + JSON.stringify('expr' + expr) + '](scope) :'
+			+ 'this._evalExpr(' + JSON.stringify(expr) + ', scope))';
 	}
 }
 
@@ -116,31 +130,30 @@ TAssembly.prototype.ctlFn_foreach = function(options, scope, cb) {
 		// worth compiling the nested template
 		tpl = this.compile(this._getTemplate(options.tpl), cb),
 		l = iterable.length,
-		itemWrapper = Object.create(null);
+		newScope = Object.create(scope);
+	newScope.$parent = scope;
 	for(var i = 0; i < l; i++) {
-		var item = iterable[i];
-		if (!item || typeof item !== 'object') {
-			item = itemWrapper;
-			item.$data = iterable[i];
-		}
-		item.$index = i;
-		item['$parent'] = iterable;
-		tpl(item);
-		// tidy up
-		//delete item.$index;
-		//delete item.$parent;
+		newScope.$data = iterable[i];
+		newScope.$index = i;
+		tpl(newScope);
 	}
 };
 TAssembly.prototype.ctlFn_template = function(options, scope, cb) {
 	// deal with options
-	var data = this._evalExpr(options.data, scope);
-	this.render(this._getTemplate(options.tpl), data, cb);
+	var newScope = {
+		$data: this._evalExpr(options.data, scope),
+		$parent: scope
+	};
+	this.render(this._getTemplate(options.tpl), newScope, cb);
 };
 
 TAssembly.prototype.ctlFn_with = function(options, scope, cb) {
-	var val = this._evalExpr(options.data, scope);
-	if (val) {
-		this.render(this._getTemplate(options.tpl), val, cb);
+	var data = this._evalExpr(options.data, scope),
+		newScope = Object.create(data);
+	newScope.$parent = scope;
+	newScope.$data = data;
+	if (newScope.$data) {
+		this.render(this._getTemplate(options.tpl), newScope, cb);
 	} else {
 		// TODO: hide the parent element similar to visible
 	}
@@ -212,6 +225,9 @@ TAssembly.prototype._assemble = function(template, cb) {
 	code.push('var val;');
 	if (!cb) {
 		code.push('var res = "", cb = function(bit) { res += bit; };');
+		code.push('var $data = scope;');
+	} else {
+		code.push('var $data = scope.$data;');
 	}
 
 	var self = this,
@@ -264,7 +280,7 @@ TAssembly.prototype._assemble = function(template, cb) {
 						// escape the attribute value
 						// TODO: hook up context-sensitive sanitization for href,
 						// src, style
-						+ 'val = val || val === 0 ? val : "";'
+						+ 'val || val === 0 ? val + "" : "";'
 						+ 'if(/[<&"]/.test(val)) { val = val.replace(/[<&"]/g,this._xmlEncoder); }'
 						+ "cb(" + JSON.stringify(' ' + name + '="')
 						+ " + val "
@@ -280,6 +296,11 @@ TAssembly.prototype._assemble = function(template, cb) {
 				this.cache[uid] = ctlOpts;
 
 				code.push('try {');
+				// Create a proper scope if not defined yet
+				code.push('if(scope.$data === undefined) {');
+				code.push('var newScope = Object.create(scope);');
+				code.push('newScope.$data = scope;scope = newScope;');
+				code.push('}');
 				// call the method
 				code.push('this[' + JSON.stringify('ctlFn_' + ctlFn)
 						// store in cache / unique key rather than here
@@ -315,6 +336,10 @@ TAssembly.prototype.render = function(template, scope, cb) {
 		cb = function(bit) {
 			res.push(bit);
 		};
+		// Wrap the scope
+		var newScope = Object.create(scope);
+		newScope.$data = scope;
+		scope = newScope;
 	}
 
 	// Just call a cached compiled version if available

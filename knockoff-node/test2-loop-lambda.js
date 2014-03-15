@@ -19,7 +19,7 @@ for ( var n=0; n <= 1000; ++n ) {
 
 var startTime = new Date();
 vars.items = Object.keys(items);
-vars.items.getvalues = function(i) {
+vars.getvalues = function(i) {
 	return items[i];
 };
 
