@@ -118,7 +118,7 @@ runTestNode \
 	"test3"        "test3-itterator.js"
 
 runTestNode \
-	"Handlebars" \
+	"Knockoff" \
 	knockoff-node \
 	"test1"        "test1.js" \
 	"test1b"       "test1b-incid.js" \
