@@ -132,7 +132,7 @@ TAssembly.prototype.ctlFn_foreach = function(options, scope, cb) {
 	var tpl = this.compile(this._getTemplate(options.tpl), cb),
 		l = iterable.length,
 		newScope = {
-			$parent: scope;
+			$parent: scope
 		};
 	for(var i = 0; i < l; i++) {
 		newScope.$data = iterable[i];
