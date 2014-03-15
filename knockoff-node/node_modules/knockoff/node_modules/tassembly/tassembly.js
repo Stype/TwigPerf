@@ -126,12 +126,14 @@ TAssembly.prototype._getTemplate = function (tpl, cb) {
 
 TAssembly.prototype.ctlFn_foreach = function(options, scope, cb) {
 	// deal with options
-	var iterable = this._evalExpr(options.data, scope),
+	var iterable = this._evalExpr(options.data, scope);
+	if (!iterable || !Array.isArray(iterable)) { return }
 		// worth compiling the nested template
-		tpl = this.compile(this._getTemplate(options.tpl), cb),
+	var tpl = this.compile(this._getTemplate(options.tpl), cb),
 		l = iterable.length,
-		newScope = Object.create(scope);
-	newScope.$parent = scope;
+		newScope = {
+			$parent: scope;
+		};
 	for(var i = 0; i < l; i++) {
 		newScope.$data = iterable[i];
 		newScope.$index = i;
