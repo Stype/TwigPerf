@@ -41,32 +41,35 @@ var simpleExpression = /^(?:[.][a-zA-Z_$]+)+$/,
 			+ '(?:\\((?:[0-9a-zA-Z_$.]+|["\'][a-zA-Z0-9_$\.]+["\'])\\))?'
 			+ ')+$');
 TAssembly.prototype._evalExpr = function (expression, scope) {
-	// Simple variable / fast path
-	if (/^[a-zA-Z_$]+$/.test(expression)) {
-		return scope[expression];
-	}
-
-	// String literal
-	if (/^'.*'$/.test(expression)) {
-		return expression.slice(1,-1).replace(/\\'/g, "'");
-	}
-
-	// Dot notation, array indexing and function calls
-	// a.b.c
-	// literal array indexes (number and string) and nullary functions only
-	// a[1]().b['b']()
-	var texpression = '.' + expression;
-	if (simpleExpression.test(texpression)) {
-		try {
-			return new Function('scope', 'with(scope) { return ' + expression + ')')(scope);
-		} catch (e) {
-			console.log(e);
-			return '';
+	var func = this.cache['expr' + expression];
+	if (!func) {
+		// Simple variable / fast path
+		if (/^[a-zA-Z_$]+$/.test(expression)) {
+			return scope[expression];
 		}
-	} else if (complexExpression.test(texpression)) {
+
+		// String literal
+		if (/^'.*'$/.test(expression)) {
+			return expression.slice(1,-1).replace(/\\'/g, "'");
+		}
+
+		// Dot notation, array indexing and function calls
+		// a.b.c
+		// literal array indexes (number and string) and nullary functions only
+		// a[1]().b['b']()
+		var texpression = '.' + expression;
+		if (simpleExpression.test(texpression) || complexExpression.test(texpression)) {
+				func = new Function('scope', 'var $index = scope.$index;'
+						+ 'var $data = scope.$data;'
+						+ 'var $parent = scope.$parent;'
+						+ 'return scope' + texpression);
+			this.cache['expr' + expression] = func;
+		}
+	}
+	if (func) {
 		try {
-			return new Function('scope', 'with(scope) { return ' + expression + '}')(scope);
-		} catch (e) {
+			return func(scope);
+		}  catch (e) {
 			console.log(e);
 			return '';
 		}
