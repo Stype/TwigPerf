@@ -115,11 +115,12 @@ TAssembly.prototype.ctlFn_foreach = function(options, scope, cb) {
 	var iterable = this._evalExpr(options.data, scope),
 		// worth compiling the nested template
 		tpl = this.compile(this._getTemplate(options.tpl), cb),
-		l = iterable.length;
+		l = iterable.length,
+		itemWrapper = Object.create(null);
 	for(var i = 0; i < l; i++) {
 		var item = iterable[i];
 		if (!item || typeof item !== 'object') {
-			item = Object.create(null);
+			item = itemWrapper;
 			item.$data = iterable[i];
 		}
 		item.$index = i;
