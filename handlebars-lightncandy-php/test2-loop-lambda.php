@@ -1,6 +1,18 @@
 <?php
 require_once '../lib/lightncandy/src/lightncandy.php';
 
+
+$items = array();
+for ( $n=0; $n <= 1000; ++$n ) {
+	$items['a'.mt_rand()] = time();
+}
+
+function getItems() {
+	global $items;
+	return $items;
+}
+
+$time_start = microtime(true);
 // Rendered PHP of template
 $phpStr = LightnCandy::compile(
 	'<div id="{{ id }}">{{# items }}<div id="{{.}}">{{# getvalues}}{{.}}{{/ getvalues}}</div>{{/ items }}</div>',
@@ -23,18 +35,6 @@ $phpStr = LightnCandy::compile(
 //$renderer = include($php_inc);
 // Method 2 (potentially insecure):
 $renderer = LightnCandy::prepare( $phpStr );
-
-$items = array();
-for ( $n=0; $n <= 1000; ++$n ) {
-	$items['a'.mt_rand()] = time();
-}
-
-function getItems() {
-	global $items;
-	return $items;
-}
-
-$time_start = microtime(true);
 for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['items'] = array_keys( $items );
 	$vars['id'] = "divid";

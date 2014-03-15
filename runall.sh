@@ -118,6 +118,15 @@ runTestNode \
 	"test3"        "test3-itterator.js"
 
 runTestNode \
+	"Handlebars" \
+	knockoff-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
+
+runTestNode \
 	"Handlebars HTMLJS" \
 	handlebars-htmljs-node \
 	"test1"        "test1-htmljs.js" \

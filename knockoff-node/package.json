@@ -1,0 +1,6 @@
+{
+	"name": "knockoffbench",
+	"dependencies": {
+		"knockoff": "git+https://github.com/gwicke/knockoff#master"
+	}
+}

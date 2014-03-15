@@ -1,6 +1,7 @@
 <?php
 require_once '../lib/lightncandy/src/lightncandy.php';
 
+$time_start = microtime(true);
 // Rendered PHP of template
 $phpStr = LightnCandy::compile( '<div id="{{ id }}">{{ body }}</div>' );
 
@@ -12,7 +13,6 @@ $phpStr = LightnCandy::compile( '<div id="{{ id }}">{{ body }}</div>' );
 // Method 2 (potentially insecure):
 $renderer = LightnCandy::prepare( $phpStr );
 
-$time_start = microtime(true);
 for ( $n=0; $n <= 100000; ++$n ) {
 	$vars['id'] = "divid$n";
 	$vars['body'] = 'my div\'s body';
