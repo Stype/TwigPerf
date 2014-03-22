@@ -1,52 +1,61 @@
 #!/bin/bash -e
 
+if [ "$1" == "-q" ];then
+    quiet="y"
+fi
+
 function runTestPHP {
-	runTest php "(PHP)" "$@"
-	runTest "hhvm -vEval.Jit=1" "(HHVM)" "$@"
+    runTest php "(PHP)" "$@"
+    runTest "hhvm -vEval.Jit=1" "(HHVM)" "$@"
 	
 }
 
 function runTestNode {
-	runTest node "(node.js)" "$@"
+    runTest node "(node.js)" "$@"
 }
 
 function runTest {
-	iterations=10
+iterations=50
 
-	cd $4
-	echo -e "Set: \033[35;40m$3 $2\033[0;00m (${PWD##*/})"
+cd $4
+echo -e "Set: \033[35;40m$3 $2\033[0;00m (${PWD##*/})"
 
-	for (( i=5; i<=$#; i++ ))
-	do
-		sum=0
-		min=0
-		max=0
+for (( i=5; i<=$#; i++ ))
+do
+    sum=0
+    min=0
+    max=0
 
-		echo -ne "Test: \033[36;40m${!i}\033[0;00m"
-		((i++))
+    echo -ne "Test: \033[36;40m${!i}\033[0;00m"
+    ((i++))
 
-		for (( j=1; j<=$iterations; j++ ))
-		do
-			echo -n " $j..."
-			result=`$1 ${!i}`
-			time=`echo $result | awk '{print $2}'`
+    if [ -z "$quiet" ];then
+        echo -n " [000]"
+    fi
+    for j in $(seq -f "%03g" 0 $iterations)
+    do
+        if [ -z "$quiet" ];then
+            echo -ne "\b\b\b\b$j]"
+        fi
+        result=`$1 ${!i}`
+        time=`echo $result | awk '{print $2}'`
 
-			sum=`bc <<< " $sum + $time"`
+        sum=`bc <<< " $sum + $time"`
 
-			if [ $min == 0 ] || [ `bc <<< " $time < $min"` -eq 1 ]
-			then
-				min=$time
-			fi
+        if [ $min == 0 ] || [ `bc <<< " $time < $min"` -eq 1 ]
+        then
+            min=$time
+        fi
 
-			if [ $max == 0 ] || [ `bc <<< " $time > $max"` -eq 1 ]
-			then
-				max=$time
-			fi
-		done
+        if [ $max == 0 ] || [ `bc <<< " $time > $max"` -eq 1 ]
+        then
+            max=$time
+        fi
+    done
 
-		printf " Avg: \033[33;40m%.4f\033[0;00m Min: \033[32;40m%.4f\033[0;00m Max: \033[31;40m%.4f\033[0;00m\n" `bc <<< "scale=5; $sum / $iterations"` $min $max
-	done
-	cd ..
+    printf " Avg: \033[33;40m%.4f\033[0;00m Min: \033[32;40m%.4f\033[0;00m Max: \033[31;40m%.4f\033[0;00m\n" `bc <<< "scale=5; $sum / $iterations"` $min $max
+done
+cd ..
 }
 
 runTestNode \
