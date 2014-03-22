@@ -1,4 +1,4 @@
-tassembly
+TAssembly
 =========
 
 JSON IR for templating and corresponding runtime implementation
@@ -17,8 +17,8 @@ a tiny library.
 * Performance is on par with compiled handlebars templates, the fastest
 string-based library in our tests.
 
-* Compilation target for [KnockoutJS templates
-  (KoTasm)](https://github.com/gwicke/kotasm) and
+* Compilation target for [Knockoff templates
+  (KnockoutJS syntax)](https://github.com/gwicke/knockoff) and
   [Spacebars](https://github.com/gwicke/TemplatePerf/tree/master/handlebars-htmljs-node/spacebars-qt).
 
 Examples:
