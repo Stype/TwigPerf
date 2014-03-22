@@ -49,9 +49,68 @@ function runTest {
 	cd ..
 }
 
+runTestNode \
+	"Knockoff" \
+	knockoff-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
+
+runTestNode \
+	"Handlebars" \
+	handlebars-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
+
+runTestNode \
+	"Spacebars/TAssembly" \
+	handlebars-htmljs-node \
+	"test1"        "test1-sbqt.js" \
+	"test2"        "test2-loop-sbqt.js"
+
+runTestNode \
+	"Mustache" \
+	mustache-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
+
+runTestNode \
+	"Handlebars HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-htmljs.js" \
+	"test1b"       "test1b-incid-htmljs.js" \
+	"test2"        "test2-loop-htmljs.js" \
+	"test3"        "test3-itterator-htmljs.js"
+
+runTestNode \
+	"Spacebars/HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-sb.js" \
+	"test1b"       "test1b-incid-sb.js" \
+	"test2"        "test2-loop-sb.js" \
+	"test2 lambda" "test2-loop-lambda-sb.js" \
+	"test3"        "test3-itterator-sb.js"
+
 runTestPHP \
 	"Handlebars lightncandy" \
 	handlebars-lightncandy-php \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test2 lambda" "test2-loop-lambda.php" \
+	"test3"        "test3-itterator.php"
+
+runTestPHP \
+	"Mustache" \
+	mustache \
 	"test1"        "test1.php" \
 	"test1b"       "test1b-incid.php" \
 	"test2"        "test2-loop.php" \
@@ -90,61 +149,3 @@ runTestPHP \
 	"test2"        "test2-loop.php" \
 	"test3"        "test3-itterator.php"
 
-runTestPHP \
-	"Mustache" \
-	mustache \
-	"test1"        "test1.php" \
-	"test1b"       "test1b-incid.php" \
-	"test2"        "test2-loop.php" \
-	"test2 lambda" "test2-loop-lambda.php" \
-	"test3"        "test3-itterator.php"
-
-runTestNode \
-	"Mustache" \
-	mustache-node \
-	"test1"        "test1.js" \
-	"test1b"       "test1b-incid.js" \
-	"test2"        "test2-loop.js" \
-	"test2 lambda" "test2-loop-lambda.js" \
-	"test3"        "test3-itterator.js"
-
-runTestNode \
-	"Handlebars" \
-	handlebars-node \
-	"test1"        "test1.js" \
-	"test1b"       "test1b-incid.js" \
-	"test2"        "test2-loop.js" \
-	"test2 lambda" "test2-loop-lambda.js" \
-	"test3"        "test3-itterator.js"
-
-runTestNode \
-	"Knockoff" \
-	knockoff-node \
-	"test1"        "test1.js" \
-	"test1b"       "test1b-incid.js" \
-	"test2"        "test2-loop.js" \
-	"test2 lambda" "test2-loop-lambda.js" \
-	"test3"        "test3-itterator.js"
-
-runTestNode \
-	"Handlebars HTMLJS" \
-	handlebars-htmljs-node \
-	"test1"        "test1-htmljs.js" \
-	"test1b"       "test1b-incid-htmljs.js" \
-	"test2"        "test2-loop-htmljs.js" \
-	"test3"        "test3-itterator-htmljs.js"
-
-runTestNode \
-	"Spacebars/HTMLJS" \
-	handlebars-htmljs-node \
-	"test1"        "test1-sb.js" \
-	"test1b"       "test1b-incid-sb.js" \
-	"test2"        "test2-loop-sb.js" \
-	"test2 lambda" "test2-loop-lambda-sb.js" \
-	"test3"        "test3-itterator-sb.js"
-
-runTestNode \
-	"Spacebars/QuickTemplate" \
-	handlebars-htmljs-node \
-	"test1"        "test1-sbqt.js" \
-	"test2"        "test2-loop-sbqt.js"
