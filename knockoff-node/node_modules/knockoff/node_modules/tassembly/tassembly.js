@@ -128,6 +128,9 @@ function evalExprStub(expr) {
 	} else if (/^'/.test(expr)) {
 		// String literal
 		return JSON.stringify(expr.slice(1,-1).replace(/\\'/g, "'"));
+	} else if (/[cm]\.?[a-zA-Z_$]*$/.test(expr)) {
+		// Simple context or model reference
+		return expr;
 	} else {
 		newExpr = rewriteExpression(expr);
 		return '(function() { '
