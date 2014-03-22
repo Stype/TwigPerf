@@ -275,7 +275,16 @@ TAssembly.prototype.childContext = function (model, parCtx) {
 };
 
 TAssembly.prototype._assemble = function(template, cb) {
-	var code = [];
+	var code = [],
+		cbExpr = [];
+
+	function pushCode(codeChunk) {
+		if(cbExpr.length) {
+			code.push('cb(' + cbExpr.join('+') + ');');
+			cbExpr = [];
+		}
+		code.push(codeChunk);
+	}
 
 	code.push('var val;');
 	if (!cb) {
@@ -295,7 +304,7 @@ TAssembly.prototype._assemble = function(template, cb) {
 			c = bit.constructor;
 		if (c === String) {
 			// static string
-			code.push('cb(' + JSON.stringify(bit) + ');');
+			cbExpr.push(JSON.stringify(bit));
 		} else if (c === Array) {
 			// control structure
 			var ctlFn = bit[0],
@@ -303,11 +312,11 @@ TAssembly.prototype._assemble = function(template, cb) {
 
 			// Inline text and attr handlers for speed
 			if (ctlFn === 'text') {
-				code.push('val = ' + evalExprStub(ctlOpts) + ';'
+				pushCode('val = ' + evalExprStub(ctlOpts) + ';\n'
 					// convert val to string
-					+ 'val = val || val === 0 ? "" + val : "";'
-					+ 'if(!/[<&]/.test(val)) { cb(val); }'
-					+ 'else { cb(val.replace(/[<&]/g,this._xmlEncoder)); };');
+					+ 'val = val || val === 0 ? "" + val : "";\n'
+					+ 'if(/[<&]/.test(val)) { val = val.replace(/[<&]/g,this._xmlEncoder); }\n');
+				cbExpr.push('val');
 			} else if ( ctlFn === 'attr' ) {
 				var names = Object.keys(ctlOpts);
 				for(var j = 0; j < names.length; j++) {
@@ -335,7 +344,7 @@ TAssembly.prototype._assemble = function(template, cb) {
 							code.push('if(!val) { val = null; }');
 						}
 					}
-					code.push("if (val !== null) { "
+					pushCode("if (val !== null) { "
 						// escape the attribute value
 						// TODO: hook up context-sensitive sanitization for href,
 						// src, style
@@ -354,7 +363,7 @@ TAssembly.prototype._assemble = function(template, cb) {
 				var uid = this._getUID();
 				this.cache[uid] = ctlOpts;
 
-				code.push('try {');
+				pushCode('try {');
 				// call the method
 				code.push('this[' + JSON.stringify('ctlFn_' + ctlFn)
 						// store in cache / unique key rather than here
@@ -369,7 +378,10 @@ TAssembly.prototype._assemble = function(template, cb) {
 		}
 	}
 	if (!cb) {
-		code.push("return res;");
+		pushCode("return res;");
+	} else {
+		// Force out the cb
+		pushCode("");
 	}
 	return code.join('\n');
 };
