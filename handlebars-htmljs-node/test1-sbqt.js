@@ -1,4 +1,4 @@
-var sbqt = require('./spacebars-qt');
+var sbqt = require('./spacebars-tassembly');
 
 var startTime = new Date(),
 	vars = {},

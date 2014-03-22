@@ -1,4 +1,4 @@
-var sbqt = require('./spacebars-qt');
+var sbqt = require('./spacebars-tassembly');
 
 function mt_rand () {
 	//[0..1] * PHP mt_getrandmax()

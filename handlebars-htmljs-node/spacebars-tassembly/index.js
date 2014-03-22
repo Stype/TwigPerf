@@ -2,7 +2,7 @@
 // (instead of to htmljs)
 var HTML = require('../html-tools');
 var Spacebars = require('../spacebars-compiler');
-var QT = require('../../QuickTemplate/quicktemplate');
+var ta = new (require('../../knockoff-node/node_modules/knockoff/node_modules/tassembly/tassembly').TAssembly)();
 
 HTML.toQT = function(node, parentComponent) {
 	var result = [];
@@ -78,7 +78,8 @@ HTML.Tag.prototype._toQT = function(parentComponent, result) {
 
 var codeGenPath = function(path) {
 	if (path.length > 1) { throw new Error('unimplemented'); }
-	return path[0];
+	// Assume that all paths reference the model for now
+	return 'm.' + path[0];
 };
 
 // returns: array of source strings, or null if no
@@ -182,7 +183,7 @@ SBQT.compile = function(handlebars_template) {
 	var tree = Spacebars.parse(handlebars_template);
 	var template = SBQT.codeGen(tree);
 	//console.log(JSON.stringify(template));
-	return QT.compile(template);
+	return ta.compile(template);
 };
 
 module.exports = SBQT;
