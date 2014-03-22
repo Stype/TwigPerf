@@ -91,23 +91,6 @@ runTestNode \
 	"test2 lambda" "test2-loop-lambda.js" \
 	"test3"        "test3-itterator.js"
 
-runTestNode \
-	"Handlebars HTMLJS" \
-	handlebars-htmljs-node \
-	"test1"        "test1-htmljs.js" \
-	"test1b"       "test1b-incid-htmljs.js" \
-	"test2"        "test2-loop-htmljs.js" \
-	"test3"        "test3-itterator-htmljs.js"
-
-runTestNode \
-	"Spacebars/HTMLJS" \
-	handlebars-htmljs-node \
-	"test1"        "test1-sb.js" \
-	"test1b"       "test1b-incid-sb.js" \
-	"test2"        "test2-loop-sb.js" \
-	"test2 lambda" "test2-loop-lambda-sb.js" \
-	"test3"        "test3-itterator-sb.js"
-
 runTestPHP \
 	"Handlebars lightncandy" \
 	handlebars-lightncandy-php \
@@ -157,4 +140,21 @@ runTestPHP \
 	"test1b"       "test1b-incid.php" \
 	"test2"        "test2-loop.php" \
 	"test3"        "test3-itterator.php"
+
+runTestNode \
+	"Handlebars HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-htmljs.js" \
+	"test1b"       "test1b-incid-htmljs.js" \
+	"test2"        "test2-loop-htmljs.js" \
+	"test3"        "test3-itterator-htmljs.js"
+
+runTestNode \
+	"Spacebars/HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-sb.js" \
+	"test1b"       "test1b-incid-sb.js" \
+	"test2"        "test2-loop-sb.js" \
+	"test2 lambda" "test2-loop-lambda-sb.js" \
+	"test3"        "test3-itterator-sb.js"
 
