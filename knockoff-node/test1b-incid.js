@@ -1,8 +1,6 @@
-var KnockOff = require('knockoff').KnockOff;
-
+var ko = require('knockoff');
 
 var startTime = new Date(),
-	ko = new KnockOff(),
 	vars = {},
 	template = ko.compile('<div data-bind="attr:{id:id}, text: body"></div>');
 for ( n=0; n <= 100000; ++n ) {

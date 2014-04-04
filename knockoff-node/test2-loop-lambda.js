@@ -1,4 +1,4 @@
-var ko = new (require('knockoff').KnockOff)();
+var ko = require('knockoff');
 
 function mt_rand () {
 	//[0..1] * PHP mt_getrandmax()

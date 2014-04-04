@@ -1,9 +1,8 @@
-var TAssembly = require('./tassembly.js').TAssembly;
+var ta = require('./tassembly.js');
 
 var startTime = new Date(),
 	vars = {},
-	template = (new TAssembly())
-		.compile(['<div',['attr',{id:"rm.echo('a [m.foo')"}],'>',['text','m.body'],'</div>']);
+	template = ta.compile(['<div',['attr',{id:"rm.echo('a [m.foo')"}],'>',['text','m.body'],'</div>']);
 	vars.echo = function(e) {
 		return e;
 	};
