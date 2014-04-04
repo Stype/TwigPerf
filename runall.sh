@@ -92,6 +92,15 @@ runTestNode \
 	"test3"        "test3-itterator.js"
 
 runTestPHP \
+	"TAssembly" \
+	tassembly-php \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test2 lambda" "test2-loop-lambda.php" \
+	"test3"        "test3-itterator.php"
+
+runTestPHP \
 	"Handlebars lightncandy" \
 	handlebars-lightncandy-php \
 	"test1"        "test1.php" \
@@ -103,15 +112,6 @@ runTestPHP \
 runTestPHP \
 	"Mustache" \
 	mustache \
-	"test1"        "test1.php" \
-	"test1b"       "test1b-incid.php" \
-	"test2"        "test2-loop.php" \
-	"test2 lambda" "test2-loop-lambda.php" \
-	"test3"        "test3-itterator.php"
-
-runTestPHP \
-	"TAssembly" \
-	tassembly-php \
 	"test1"        "test1.php" \
 	"test1b"       "test1b-incid.php" \
 	"test2"        "test2-loop.php" \
