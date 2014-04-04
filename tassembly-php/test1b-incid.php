@@ -7,7 +7,7 @@ $ir = json_decode( $template, true );
 
 $model = array();
 for ( $n=0; $n <= 100000; ++$n ) {
-	$model['id'] = 'divid';
+	$model['id'] = "divid$n";
 	$model['body'] = 'my div\'s body';
 	$html = TAssembly\TAssembly::render( $ir, $model );
 }
