@@ -2,7 +2,7 @@
 // (instead of to htmljs)
 var HTML = require('../html-tools');
 var Spacebars = require('../spacebars-compiler');
-var ta = new (require('../../knockoff-node/node_modules/knockoff/node_modules/tassembly/tassembly').TAssembly)();
+var ta = require('../../knockoff-node/node_modules/knockoff/node_modules/tassembly/tassembly');
 
 HTML.toQT = function(node, parentComponent) {
 	var result = [];
