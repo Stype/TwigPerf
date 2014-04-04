@@ -55,7 +55,7 @@ function rewriteExpression (expr) {
 		i = -1,
 		c = '';
 	do {
-		if (/^$|[\[:(]/.test(c)) {
+		if (/^$|[\[:(,]/.test(c)) {
 			res += c;
 			if (/[pri]/.test(expr[i+1])
 				&& /(?:p(?:[cm]s?)?|r[mc]|i)(?:[\.\)\]}]|$)/.test(expr.slice(i+1))) {
@@ -103,7 +103,8 @@ TAssembly.prototype._evalExpr = function (expression, ctx) {
 		try {
 			return func(ctx);
 		}  catch (e) {
-			console.log(e);
+			console.error('Error while evaluating ' + expression);
+			console.error(e);
 			return '';
 		}
 	}
@@ -139,7 +140,7 @@ function evalExprStub(expr) {
 		return '(function() { '
 			+ 'try {'
 			+ 'return ' + newExpr + ';'
-			+ '} catch (e) { console.error(e); return "";}})()';
+			+ '} catch (e) { console.error("Error in " + ' + JSON.stringify(newExpr) +'+": " + e.toString()); return "";}})()';
 	}
 }
 
@@ -496,7 +497,7 @@ TAssembly.prototype.compile = function(template, options) {
 		code += 'return res;';
 	}
 
-	//console.log(code);
+	//console.error(code);
 
 	var fn = new Function('c', 'options', code),
 		boundFn = function(ctx) {
