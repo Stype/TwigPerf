@@ -24,7 +24,7 @@ for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['items'] = array_keys( $items );
 	$vars['id'] = "divid";
 	$vars['body'] = 'my div\'s body';
-	$html = TAssembly\TAssembly::render( $template, $vars, $options );
+	$html = TAssembly::render( $template, $vars, $options );
 }
 echo "time: " . ( microtime(true) - $time_start ) . "\n";
 //echo "$html\n";

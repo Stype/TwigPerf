@@ -9,7 +9,7 @@ $model = array();
 for ( $n=0; $n <= 100000; ++$n ) {
 	$model['id'] = 'divid';
 	$model['body'] = 'my div\'s body';
-	$html = TAssembly\TAssembly::render( $ir, $model );
+	$html = TAssembly::render( $ir, $model );
 }
 echo "time: " . ( microtime(true) - $time_start ) . "\n";
 echo "$html\n";

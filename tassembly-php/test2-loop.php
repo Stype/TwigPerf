@@ -18,7 +18,7 @@ for ( $n=0; $n <= 1000; ++$n ) {
 		$m_items[] = array( 'key'=>$key, 'val'=>$val );
 	}
 	$vars['m_items'] = $m_items;
-	$html = TAssembly\TAssembly::render( $template, $vars );
+	$html = TAssembly::render( $template, $vars );
 }
 echo "time: " . ( microtime(true) - $time_start ) . "\n";
 //echo "$html\n";
