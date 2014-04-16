@@ -2,6 +2,9 @@
 
 if [ "$1" == "-q" ];then
     quiet="y"
+    # TODO: disable color too
+    # For now, can strip it with
+    # sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
 fi
 
 function runTestPHP {
