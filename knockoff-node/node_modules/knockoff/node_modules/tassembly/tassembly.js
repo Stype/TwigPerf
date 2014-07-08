@@ -500,8 +500,8 @@ TAssembly.prototype.compile = function(template, options) {
 	//console.error(code);
 
 	var fn = new Function('c', 'options', code),
-		boundFn = function(ctx) {
-			return fn.call(self, ctx, opts);
+		boundFn = function(ctx, dynamicOpts) {
+			return fn.call(self, ctx, dynamicOpts || opts);
 		};
 	template.__cachedFn = boundFn;
 
