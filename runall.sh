@@ -1,5 +1,10 @@
 #!/bin/bash -e
 
+# Convert the results to a wikitext table with:
+# sed -e 's/Set: /|-\n|/g' -e 's/ ([^)]*)$//g' \
+#    -e 's/Test:.*Min: //g' -e 's/ Max: .*$//g' results.txt \
+#    | sed -e ':a;N;$!ba;s/\n\([0-9]\)/ || \1/g'
+
 if [ "$1" == "-q" ];then
     quiet="y"
     # TODO: disable color too
