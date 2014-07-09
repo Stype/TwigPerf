@@ -38,6 +38,7 @@ while to finish for all libraries, runtimes & tests.
 Also see [the on-wiki version](https://www.mediawiki.org/wiki/Requests_for_comment/HTML_templating_library#Performance).
 
 Library / runtime | Test 1 (attr/text interpolation) | Test1b (same with random attr) | Test2 (iterate obj array) | Test2 (iterate obj array, lambda) | Test3 (iterate item array)
+|-----|:------|:--------|:-------|:--------|:----------|
 |TAssembly (node.js) | 0.0420 | 0.0630 | 0.6190 | 0.5010 | 0.1860
 |Knockoff (node.js) | 0.0530 | 0.0750 | 0.6370 | 0.4690 | 0.1970
 |Handlebars (node.js) | 0.1300 | 0.1750 | 0.6060 | 1.1450 | 0.1870
