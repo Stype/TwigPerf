@@ -1,0 +1,6 @@
+{
+	"name": "mustacheTest",
+	"dependencies": {
+		"handlebars": "x.x.x"
+	}
+}
