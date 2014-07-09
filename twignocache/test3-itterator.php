@@ -20,6 +20,6 @@ for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['body'] = 'my div\'s body';
 	$html = $twig->render('<div id="{{ id }}">{% for item in items %}<p>{{ item }}</p>{% endfor %}</div>', $vars );
 }
-echo "time: " . ( microtime(true) - $time_start );
-#echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+#echo "$html\n";
 

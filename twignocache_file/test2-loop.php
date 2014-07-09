@@ -22,6 +22,6 @@ for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['body'] = 'my div\'s body';
 	$html = $twig->render( 'test2_multidiv.html', $vars );
 }
-echo "time: " . ( microtime(true) - $time_start );
-#echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+#echo "$html\n";
 

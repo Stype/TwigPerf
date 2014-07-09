@@ -18,6 +18,6 @@ for ( $n=0; $n <= 1000; ++$n ) {
 	$vars['body'] = 'my div\'s body';
 	$html = $engine->render('<div id="{{ id }}">{{# items }}<p>{{ . }}</p>{{/ items }}</div>', $vars );
 }
-echo "time: " . ( microtime(true) - $time_start );
-#echo "\n$html\n";
+echo "time: " . ( microtime(true) - $time_start ) . "\n";
+#echo "$html\n";
 

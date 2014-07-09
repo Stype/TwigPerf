@@ -1,0 +1,6 @@
+{
+	"name": "hoganBench",
+	"dependencies": {
+		"hogan.js": "x.x.x"
+	}
+}

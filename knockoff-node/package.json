@@ -1,0 +1,6 @@
+{
+	"name": "knockoffbench",
+	"dependencies": {
+		"knockoff": "x.x.x"
+	}
+}

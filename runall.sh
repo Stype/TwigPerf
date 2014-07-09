@@ -1,155 +1,195 @@
-#!/bin/bash
+#!/bin/bash -e
 
+# Convert the results to a wikitext table with:
+# sed -e 's/Set: /|-\n|/g' -e 's/ ([^)]*)$//g' \
+#    -e 's/Test:.*Min: //g' -e 's/ Max: .*$//g' results.txt \
+#    | sed -e ':a;N;$!ba;s/\n\([0-9]\)/ || \1/g'
 
-echo ">>>>>>>>>> MediaWiki Templates <<<<<<<<<<<<<"
-cd mediawiki
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
+if [ "$1" == "-q" ];then
+    quiet="y"
+    # TODO: disable color too
+    # For now, can strip it with
+    # sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
+fi
+
+function runTestPHP {
+    runTest php "(PHP)" "$@"
+    runTest "hhvm -vEval.Jit=1" "(HHVM)" "$@"
+	
+}
+
+function runTestNode {
+    runTest node "(node.js)" "$@"
+}
+
+function runTest {
+iterations=50
+
+cd $4
+echo -e "Set: \033[35;40m$3 $2\033[0;00m (${PWD##*/})"
+
+for (( i=5; i<=$#; i++ ))
 do
-	php test1.php
-done
+    sum=0
+    min=0
+    max=0
 
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
+    echo -ne "Test: \033[36;40m${!i}\033[0;00m"
+    ((i++))
 
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
+    if [ -z "$quiet" ];then
+        echo -n " [000]"
+    fi
+    for j in $(seq -f "%03g" 0 $iterations)
+    do
+        if [ -z "$quiet" ];then
+            echo -ne "\b\b\b\b$j]"
+        fi
+        result=`$1 ${!i}`
+        time=`echo $result | awk '{print $2}'`
 
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
+        sum=`bc <<< " $sum + $time"`
 
+        if [ $min == 0 ] || [ `bc <<< " $time < $min"` -eq 1 ]
+        then
+            min=$time
+        fi
+
+        if [ $max == 0 ] || [ `bc <<< " $time > $max"` -eq 1 ]
+        then
+            max=$time
+        fi
+    done
+
+    printf " Avg: \033[33;40m%.4f\033[0;00m Min: \033[32;40m%.4f\033[0;00m Max: \033[31;40m%.4f\033[0;00m\n" `bc <<< "scale=5; $sum / $iterations"` $min $max
+done
 cd ..
+}
 
+runTestNode \
+	"TAssembly" \
+	knockoff-node-precompiled \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
 
-echo ">>>>>>>>>> Twig String No Cache <<<<<<<<<<<<<"
-cd twignocache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
+runTestNode \
+	"Knockoff" \
+	knockoff-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
 
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
+runTestNode \
+	"Handlebars" \
+	handlebars-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
 
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
+runTestNode \
+	"Hogan" \
+	hogan-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
 
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
+runTestNode \
+	"Spacebars/TAssembly" \
+	handlebars-htmljs-node \
+	"test1"        "test1-sbqt.js" \
+	"test2"        "test2-loop-sbqt.js"
 
-cd ..
+runTestNode \
+	"Mustache" \
+	mustache-node \
+	"test1"        "test1.js" \
+	"test1b"       "test1b-incid.js" \
+	"test2"        "test2-loop.js" \
+	"test2 lambda" "test2-loop-lambda.js" \
+	"test3"        "test3-itterator.js"
 
+runTestPHP \
+	"TAssembly" \
+	tassembly-php \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test2 lambda" "test2-loop-lambda.php" \
+	"test3"        "test3-itterator.php"
 
-echo ">>>>>>>>>> Twig File No Cache <<<<<<<<<<<<<"
-cd twignocache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
+runTestPHP \
+	"Handlebars lightncandy" \
+	handlebars-lightncandy-php \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test2 lambda" "test2-loop-lambda.php" \
+	"test3"        "test3-itterator.php"
 
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
+runTestPHP \
+	"Mustache" \
+	mustache \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test2 lambda" "test2-loop-lambda.php" \
+	"test3"        "test3-itterator.php"
 
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
+runTestPHP \
+	"MediaWiki Templates" \
+	mediawiki \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test3"        "test3-itterator.php"
 
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
+runTestPHP \
+	"Twig String (No Cache)" \
+	twignocache \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test3"        "test3-itterator.php"
 
-cd ..
+runTestPHP \
+	"Twig File (No Cache)" \
+	twignocache_file \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test3"        "test3-itterator.php"
 
+runTestPHP \
+	"Twig File (Cached)" \
+	twigcache_file \
+	"test1"        "test1.php" \
+	"test1b"       "test1b-incid.php" \
+	"test2"        "test2-loop.php" \
+	"test3"        "test3-itterator.php"
 
-echo ">>>>>>>>>> Twig File Cached <<<<<<<<<<<<<"
-cd twigcache_file
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
+runTestNode \
+	"Handlebars HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-htmljs.js" \
+	"test1b"       "test1b-incid-htmljs.js" \
+	"test2"        "test2-loop-htmljs.js" \
+	"test3"        "test3-itterator-htmljs.js"
 
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
+runTestNode \
+	"Spacebars/HTMLJS" \
+	handlebars-htmljs-node \
+	"test1"        "test1-sb.js" \
+	"test1b"       "test1b-incid-sb.js" \
+	"test2"        "test2-loop-sb.js" \
+	"test2 lambda" "test2-loop-lambda-sb.js" \
+	"test3"        "test3-itterator-sb.js"
 
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo ">>>>>>>>>> Mustache <<<<<<<<<<<<<"
-cd mustache
-echo "*** test1 (`pwd`)***"
-for i in {1..10}
-do
-	php test1.php
-done
-
-echo "*** test1b (`pwd`)***"
-for i in {1..10}
-do
-	php test1b-incid.php
-done
-
-echo "*** test2 (`pwd`)***"
-for i in {1..10}
-do
-	php test2-loop.php
-done
-
-echo "*** test2 lambda (`pwd`)***"
-for i in {1..10}
-do
-	test2-loop-lambda.php
-done
-
-echo "*** test3 (`pwd`)***"
-for i in {1..10}
-do
-	php test3-itterator.php
-done
-
-cd ..
-
-
-echo "done"
